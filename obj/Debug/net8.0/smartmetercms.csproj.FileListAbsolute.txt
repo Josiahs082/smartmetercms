@@ -1,0 +1,9 @@
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.csproj.AssemblyReference.cache
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.GeneratedMSBuildEditorConfig.editorconfig
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.AssemblyInfoInputs.cache
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.AssemblyInfo.cs
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.csproj.CoreCompileInputs.cache
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.MvcApplicationPartsAssemblyInfo.cache
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.RazorAssemblyInfo.cache
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.RazorAssemblyInfo.cs
+/home/josiah/smartmetercms/obj/Debug/net8.0/smartmetercms.sourcelink.json
