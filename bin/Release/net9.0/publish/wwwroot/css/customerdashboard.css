@@ -1,0 +1,160 @@
+
+    .container {
+        padding: 20px;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .meter-id {
+        font-size: 1.2em;
+        font-weight: 500;
+    }
+    .logout-form {
+        margin: 0;
+    }
+    .logout-form button {
+        padding: 8px 16px;
+    }
+    .chart-section {
+        margin-bottom: 30px;
+    }
+    .tabs {
+        margin: 20px 0;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+    }
+    .tab-button {
+        padding: 10px 20px;
+        border: none;
+        background: #f0f0f0;
+        cursor: pointer;
+        border-radius: 5px 5px 0 0;
+        transition: background-color 0.3s;
+        font-weight: 500;
+        flex: 0 1 auto;
+        min-width: 100px;
+        text-align: center;
+    }
+    .tab-button:hover {
+        background: #e0e0e0;
+    }
+    .tab-button.active {
+        background: #4BC0C0;
+        color: white;
+        font-weight: 600;
+    }
+    .graph-section {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    #date-selectors {
+        flex: 0 0 auto;
+    }
+    .selector {
+        display: none;
+        padding: 10px;
+        background: #f9f9f9;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 250px;
+    }
+    .selector.active {
+        display: flex;
+    }
+    .selector input, .selector select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    .chart-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 900px;
+        min-width: 400px;
+        height: 400px;
+        min-height: 300px;
+        border: 1px solid #e0e0e0;
+        flex: 1;
+    }
+    .user-info {
+        margin-bottom: 20px;
+    }
+    .bills-section {
+        margin-bottom: 20px;
+    }
+    .bills-section .btn {
+        margin-top: 10px;
+    }
+    @media (max-width: 768px) {
+        .tab-button {
+            padding: 8px 10px;
+            min-width: 80px;
+        }
+        .selector {
+            padding: 8px;
+            width: 200px;
+        }
+        .chart-container {
+            padding: 15px;
+            height: 350px;
+            max-width: 700px;
+            min-width: 350px;
+        }
+        .graph-section {
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+    @media (max-width: 480px) {
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .header-right {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .tabs {
+            flex-direction: column;
+            border-bottom: none;
+        }
+        .tab-button {
+            border-radius: 5px;
+            margin-bottom: 5px;
+            padding: 10px;
+        }
+        .selector {
+            width: 180px;
+        }
+        .chart-container {
+            height: 300px;
+            max-width: 100%;
+            min-width: 300px;
+            padding: 10px;
+        }
+    }
