@@ -1,22 +1,22 @@
-# Use the official .NET SDK image to build and publish the app
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+# Use official .NET SDK image for building the app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy csproj and restore as distinct layers
+# Copy csproj and restore as separate layers
 COPY *.csproj ./
 RUN dotnet restore
 
-# Copy everything else and build
+# Copy all files and build the release
 COPY . ./
 RUN dotnet publish -c Release -o out
 
-# Use the ASP.NET runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=build /app/out .
+COPY --from=build /app/out ./
 
-# Expose port 80
+# Expose default port
 EXPOSE 80
 
-# Start the app
+# Start app
 ENTRYPOINT ["dotnet", "smartmetercms.dll"]
