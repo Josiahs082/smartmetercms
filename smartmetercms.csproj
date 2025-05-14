@@ -27,9 +27,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Makes EF Core CLI commands like 'dotnet ef database update' work in environments like Render -->
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="9.0.0" />
-  </ItemGroup>
-
 </Project>
