@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Login";
+}
+<link rel="stylesheet" href="~/css/login.css" />
+
+<h2>Login</h2>
+
+<form method="post">
+    <div>
+        <label for="meterID">MeterID:</label>
+        <input type="text" name="meterID" id="meterID" required />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required />
+    </div>
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</form>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <p style="color:red;">@ViewBag.ErrorMessage</p>
+}

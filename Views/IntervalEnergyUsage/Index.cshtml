@@ -1,0 +1,99 @@
+@model IEnumerable<smartmetercms.Models.IntervalEnergyUsage>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link href="~/css/intervalenergyusageindex.css" rel="stylesheet" />
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-action="DeleteMultiple" method="post">
+    <div class="mb-3">
+        <button type="button" id="selectAllBtn" class="btn btn-secondary">Select All</button>
+        <button type="button" id="deselectAll" class="btn btn-secondary">Deselect All</button>
+        <input type="submit" value="Delete Selected" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete selected items?');" />
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAllCheck" /></th>
+                <th>@Html.DisplayNameFor(model => model.Timestamp)</th>
+                <th>@Html.DisplayNameFor(model => model.User)</th>
+                <th>@Html.DisplayNameFor(model => model.EnergyUsed)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><input type="checkbox" name="selectedIds" value="@item.Id" class="selectItem" /></td>
+                    <td>@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                    <td>
+                        @if (item.User != null)
+                        {
+                            @item.User.MeterID
+                        }
+                        else
+                        {
+                            <span class="text-danger">No User</span>
+                        }
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.EnergyUsed)</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+
+<script>
+    // Header checkbox functionality
+    document.getElementById('selectAllCheck').addEventListener('click', function(e) {
+        var checkboxes = document.getElementsByClassName('selectItem');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = e.target.checked;
+        }
+    });
+
+    // Select All button functionality
+    document.getElementById('selectAllBtn').addEventListener('click', function() {
+        var checkboxes = document.getElementsByClassName('selectItem');
+        var headerCheckbox = document.getElementById('selectAllCheck');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = true;
+        }
+        headerCheckbox.checked = true;
+    });
+
+    // Deselect All button functionality
+    document.getElementById('deselectAll').addEventListener('click', function() {
+        var checkboxes = document.getElementsByClassName('selectItem');
+        var headerCheckbox = document.getElementById('selectAllCheck');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+        }
+        headerCheckbox.checked = false;
+    });
+
+    // Update header checkbox when individual checkboxes change
+    document.querySelectorAll('.selectItem').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            var allCheckboxes = document.getElementsByClassName('selectItem');
+            var headerCheckbox = document.getElementById('selectAllCheck');
+            var allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
+            var anyChecked = Array.from(allCheckboxes).some(cb => cb.checked);
+            
+            headerCheckbox.checked = allChecked;
+            headerCheckbox.indeterminate = !allChecked && anyChecked;
+        });
+    });
+</script>

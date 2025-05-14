@@ -1,0 +1,232 @@
+@model smartmetercms.Models.User
+
+@{
+    ViewData["Title"] = "Customer Dashboard";
+}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+<div class="container">
+    <h1>Welcome, @Model.MeterID</h1>
+
+    <!-- Display User Information -->
+    <div class="user-info">
+        <p>Role: @Model.Role</p>
+    </div>
+
+    <!-- Display Bills -->
+    <h2>My Bills</h2>
+    @if (Model.Bills != null && Model.Bills.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Billing Period Start</th>
+                    <th>Billing Period End</th>
+                    <th>Total Energy Used (kWh)</th>
+                    <th>Amount Due</th>
+                    <th>Paid Status</th>
+                    <th>Payment Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bill in Model.Bills)
+                {
+                    <tr>
+                        <td>@bill.BillingPeriodStart.ToString("yyyy-MM-dd")</td>
+                        <td>@bill.BillingPeriodEnd.ToString("yyyy-MM-dd")</td>
+                        <td>@bill.TotalEnergyUsed</td>
+                        <td>@bill.AmountDue</td>
+                        <td>@(bill.PaidStatus ? "Paid" : "Unpaid")</td>
+                        <td>@(bill.PaymentDate?.ToString("yyyy-MM-dd") ?? "Not Paid")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>You have no bills.</p>
+    }
+
+<!-- Display Interval Energy Usage -->
+<h2>My Interval Energy Usage</h2>
+
+<!-- Tabs for time intervals -->
+<div class="tabs">
+    <button class="tab-button active" onclick="switchTab('daily')">Daily</button>
+    <button class="tab-button" onclick="switchTab('monthly')">Monthly</button>
+    <button class="tab-button" onclick="switchTab('yearly')">Yearly</button>
+</div>
+
+<!-- Date Selectors -->
+<div id="date-selectors">
+    <div id="daily-selector" class="selector active">
+        <input type="date" id="dailyDate" class="form-control" onchange="updateChartData()" />
+        <select id="timePeriod" onchange="updateChartData()">
+            <option value="morning">Morning (12 AM - 12 PM)</option>
+            <option value="evening">Evening (12 PM - 12 AM)</option>
+        </select>
+    </div>
+    <div id="monthly-selector" class="selector">
+        <input type="month" id="monthlyDate" class="form-control" onchange="updateChartData()" />
+    </div>
+    <div id="yearly-selector" class="selector">
+        <input type="number" id="yearlyDate" class="form-control" min="2000" max="2100" onchange="updateChartData()" />
+    </div>
+</div>
+
+@if (Model.IntervalEnergyUsages != null && Model.IntervalEnergyUsages.Any())
+{
+    <!-- Hidden table to store all data -->
+    <table class="table" style="display: none;">
+        <tbody id="data-table">
+            @foreach (var interval in Model.IntervalEnergyUsages)
+            {
+                <tr class="interval-row" 
+                    data-timestamp="@interval.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")" 
+                    data-energy="@interval.EnergyUsed">
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Chart -->
+    <div class="chart-container" style="position: relative; max-height:600px; width: 100%; max-width: 1000px; margin-left: 0; margin-right: auto;">
+        <canvas id="intervalEnergyChart"></canvas>
+    </div>
+
+    <script>
+        var ctx = document.getElementById('intervalEnergyChart').getContext('2d');
+        var intervalEnergyChart;
+        var currentTab = 'daily';
+        var allData = @Html.Raw(Json.Serialize(Model.IntervalEnergyUsages.Select(x => new { 
+            timestamp = x.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"), 
+            energyUsed = x.EnergyUsed 
+        }).ToArray()));
+
+        // Set default dates
+        window.onload = function() {
+            var today = new Date();
+            document.getElementById('dailyDate').value = today.toISOString().split('T')[0];
+            document.getElementById('monthlyDate').value = today.toISOString().slice(0,7);
+            document.getElementById('yearlyDate').value = today.getFullYear();
+            updateChartData();
+        }
+
+        // Switch between tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.selector').forEach(sel => sel.classList.remove('active'));
+            document.querySelector(`button[onclick="switchTab('${tab}')"]`).classList.add('active');
+            document.getElementById(`${tab}-selector`).classList.add('active');
+            updateChartData();
+        }
+
+        // Update chart data based on selection
+        function updateChartData() {
+            let filteredData = [];
+            const selectedDate = {
+                daily: document.getElementById('dailyDate').value,
+                monthly: document.getElementById('monthlyDate').value,
+                yearly: document.getElementById('yearlyDate').value
+            };
+
+            if (currentTab === 'yearly') {
+                // Yearly: Show monthly totals from Jan to Dec
+                filteredData = Array(12).fill(0).map((_, i) => ({ month: i, energyUsed: 0 }));
+                allData.forEach(d => {
+                    const date = new Date(d.timestamp);
+                    if (date.getFullYear() == selectedDate.yearly) {
+                        const month = date.getMonth();
+                        filteredData[month].energyUsed += d.energyUsed;
+                    }
+                });
+
+            } else if (currentTab === 'monthly') {
+                // Monthly: Show daily totals
+                const [year, month] = selectedDate.monthly.split('-');
+                const daysInMonth = new Date(year, month, 0).getDate();
+                filteredData = Array(daysInMonth).fill(0).map((_, i) => ({ day: i + 1, energyUsed: 0 }));
+                allData.forEach(d => {
+                    const date = new Date(d.timestamp);
+                    if (date.getFullYear() == year && date.getMonth() == (month - 1)) {
+                        const day = date.getDate();
+                        filteredData[day - 1].energyUsed += d.energyUsed;
+                    }
+                });
+
+            } else { // daily
+                // Daily: Show hourly data split by morning/evening
+                const timePeriod = document.getElementById('timePeriod').value;
+                const startHour = timePeriod === 'morning' ? 0 : 12;
+                const endHour = timePeriod === 'morning' ? 12 : 24;
+                filteredData = Array(12).fill(0).map((_, i) => ({ hour: startHour + i, energyUsed: 0 }));
+                
+                allData.forEach(d => {
+                    const date = new Date(d.timestamp);
+                    if (d.timestamp.startsWith(selectedDate.daily)) {
+                        const hour = date.getHours();
+                        if (hour >= startHour && hour < endHour) {
+                            filteredData[hour - startHour].energyUsed += d.energyUsed;
+                        }
+                    }
+                });
+            }
+
+            updateChart(filteredData);
+        }
+
+        // Update the chart
+        function updateChart(data) {
+            if (intervalEnergyChart) {
+                intervalEnergyChart.destroy();
+            }
+
+            let labels, xTitle;
+            if (currentTab === 'yearly') {
+                labels = data.map(d => new Date(0, d.month).toLocaleString('default', { month: 'short' }));
+                xTitle = 'Month';
+            } else if (currentTab === 'monthly') {
+                labels = data.map(d => d.day);
+                xTitle = 'Day';
+            } else { // daily
+                labels = data.map(d => `${d.hour}:00`);
+                xTitle = 'Hour';
+            }
+
+            intervalEnergyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Energy Used (kWh)',
+                        data: data.map(d => d.energyUsed),
+                        backgroundColor: 'rgb(75, 192, 192)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: { display: true, text: xTitle }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Energy Used (kWh)' }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}
+
+    <!-- Link to Pay Bill (if there's any unpaid bill) -->
+    @if (Model.Bills != null && Model.Bills.Any(b => !b.PaidStatus))
+    {
+        <a href="/PayBill" class="btn btn-primary">Pay Bill</a>
+    }
+
+</div>

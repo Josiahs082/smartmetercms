@@ -1,0 +1,72 @@
+@model IEnumerable<smartmetercms.Models.Bill>
+
+@{
+    ViewData["Title"] = "Billing";
+}
+<link rel="stylesheet" href="~/css/billindex.css" />
+
+<h1>Bills</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MeterID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BillingPeriodStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BillingPeriodEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalEnergyUsed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountDue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaidStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeterID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillingPeriodStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillingPeriodEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalEnergyUsed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountDue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaidStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

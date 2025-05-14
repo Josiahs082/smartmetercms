@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Header with Navbar -->
+<header>
+    <div class="container">
+        <div class="logo">
+            <h1>Smart Meter CMS</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                <li><a href="@Url.Action("About", "Home")">About</a></li>
+                <li><a href="@Url.Action("Features", "Home")">Features</a></li>
+                <li><a href="@Url.Action("Login", "Account")">Login</a></li>
+            </ul>
+        </nav>
+    </div>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</header>
+
+<!-- Main Content -->
+<main>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h2>Welcome to your Smart Meter Monitoring Page</h2>
+        <p>This is an efficient energy monitoring system for customers and<br>the utility company.</p>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <h3>About Us</h3>
+        <p>Smart Meter CMS allows users to monitor energy usage, manage billing,<br>and utility company control smart meters with ease. Stay in control of your energy consumption.</p>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <h3>Features</h3>
+        <ul>
+            <li>Energy monitoring</li>
+            <li>Manage your billing and payments</li>
+            <li>Remote meter control</li>
+            <li>Interactive graphs</li>
+        </ul>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2025 Smart Meter CMS</p>
+    <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Contact Us</a></li>
+    </ul>
+</footer>

@@ -1,0 +1,62 @@
+@model IEnumerable<smartmetercms.Models.User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+<link href="~/css/userindex.css" rel="stylesheet" />
+
+<h1>User Database</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.MeterID).ToString().Replace("MeterID", "Meter ID")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Role)
+        </th>
+        <th></th>
+    </tr>
+</thead>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeterID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.MeterID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MeterID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MeterID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,63 @@
+@model smartmetercms.Models.Bill
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Bill</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MeterID" class="control-label"></label>
+                <input asp-for="MeterID" class="form-control" />
+                <span asp-validation-for="MeterID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BillingPeriodStart" class="control-label"></label>
+                <input asp-for="BillingPeriodStart" class="form-control" />
+                <span asp-validation-for="BillingPeriodStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BillingPeriodEnd" class="control-label"></label>
+                <input asp-for="BillingPeriodEnd" class="form-control" />
+                <span asp-validation-for="BillingPeriodEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalEnergyUsed" class="control-label"></label>
+                <input asp-for="TotalEnergyUsed" class="form-control" />
+                <span asp-validation-for="TotalEnergyUsed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AmountDue" class="control-label"></label>
+                <input asp-for="AmountDue" class="form-control" />
+                <span asp-validation-for="AmountDue" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="PaidStatus" /> @Html.DisplayNameFor(model => model.PaidStatus)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentDate" class="control-label"></label>
+                <input asp-for="PaymentDate" class="form-control" />
+                <span asp-validation-for="PaymentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
