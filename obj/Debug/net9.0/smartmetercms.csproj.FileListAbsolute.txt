@@ -376,3 +376,15 @@
 /home/josiah/smartmetercms/obj/Debug/net9.0/smartmetercms.pdb
 /home/josiah/smartmetercms/obj/Debug/net9.0/smartmetercms.genruntimeconfig.cache
 /home/josiah/smartmetercms/obj/Debug/net9.0/ref/smartmetercms.dll
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/publish/web.config
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/web.config
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/appsettings.Development.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/appsettings.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/publish/appsettings.Development.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/publish/appsettings.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/publish/smartmetercms.deps.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/publish/smartmetercms.runtimeconfig.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/publish/smartmetercms.staticwebassets.endpoints.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/smartmetercms.deps.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/smartmetercms.runtimeconfig.json
+/home/josiah/smartmetercms/bin/Debug/net9.0/publish/publish/publish/publish/publish/smartmetercms.staticwebassets.endpoints.json
