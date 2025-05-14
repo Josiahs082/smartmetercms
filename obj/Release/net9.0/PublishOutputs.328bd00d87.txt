@@ -1,4 +1,5 @@
 /home/josiah/smartmetercms/publish/smartmetercms
+/home/josiah/smartmetercms/publish/publish/publish/publish/publish/web.config
 /home/josiah/smartmetercms/publish/publish/publish/publish/web.config
 /home/josiah/smartmetercms/publish/publish/publish/web.config
 /home/josiah/smartmetercms/publish/publish/web.config
@@ -10,6 +11,11 @@
 /home/josiah/smartmetercms/publish/publish/publish/appsettings.json
 /home/josiah/smartmetercms/publish/publish/publish/publish/appsettings.Development.json
 /home/josiah/smartmetercms/publish/publish/publish/publish/appsettings.json
+/home/josiah/smartmetercms/publish/publish/publish/publish/publish/appsettings.Development.json
+/home/josiah/smartmetercms/publish/publish/publish/publish/publish/appsettings.json
+/home/josiah/smartmetercms/publish/publish/publish/publish/publish/smartmetercms.deps.json
+/home/josiah/smartmetercms/publish/publish/publish/publish/publish/smartmetercms.runtimeconfig.json
+/home/josiah/smartmetercms/publish/publish/publish/publish/publish/smartmetercms.staticwebassets.endpoints.json
 /home/josiah/smartmetercms/publish/publish/publish/publish/smartmetercms.deps.json
 /home/josiah/smartmetercms/publish/publish/publish/publish/smartmetercms.runtimeconfig.json
 /home/josiah/smartmetercms/publish/publish/publish/publish/smartmetercms.staticwebassets.endpoints.json
@@ -66,6 +72,7 @@
 /home/josiah/smartmetercms/publish/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
 /home/josiah/smartmetercms/publish/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 /home/josiah/smartmetercms/publish/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
+/home/josiah/smartmetercms/publish/Microsoft.Win32.SystemEvents.dll
 /home/josiah/smartmetercms/publish/Mono.TextTemplating.dll
 /home/josiah/smartmetercms/publish/Newtonsoft.Json.dll
 /home/josiah/smartmetercms/publish/NuGet.Common.dll
@@ -80,7 +87,6 @@
 /home/josiah/smartmetercms/publish/SQLitePCLRaw.batteries_v2.dll
 /home/josiah/smartmetercms/publish/SQLitePCLRaw.core.dll
 /home/josiah/smartmetercms/publish/SQLitePCLRaw.provider.e_sqlite3.dll
-/home/josiah/smartmetercms/publish/System.ClientModel.dll
 /home/josiah/smartmetercms/publish/System.CodeDom.dll
 /home/josiah/smartmetercms/publish/System.Composition.AttributedModel.dll
 /home/josiah/smartmetercms/publish/System.Composition.Convention.dll
@@ -88,12 +94,15 @@
 /home/josiah/smartmetercms/publish/System.Composition.Runtime.dll
 /home/josiah/smartmetercms/publish/System.Composition.TypedParts.dll
 /home/josiah/smartmetercms/publish/System.Configuration.ConfigurationManager.dll
+/home/josiah/smartmetercms/publish/System.Drawing.Common.dll
 /home/josiah/smartmetercms/publish/System.IdentityModel.Tokens.Jwt.dll
 /home/josiah/smartmetercms/publish/System.Memory.Data.dll
 /home/josiah/smartmetercms/publish/System.Net.WebSockets.WebSocketProtocol.dll
 /home/josiah/smartmetercms/publish/System.Reflection.MetadataLoadContext.dll
 /home/josiah/smartmetercms/publish/System.Runtime.Caching.dll
 /home/josiah/smartmetercms/publish/System.Security.Cryptography.ProtectedData.dll
+/home/josiah/smartmetercms/publish/System.Security.Permissions.dll
+/home/josiah/smartmetercms/publish/System.Windows.Extensions.dll
 /home/josiah/smartmetercms/publish/af/Humanizer.resources.dll
 /home/josiah/smartmetercms/publish/ar/Humanizer.resources.dll
 /home/josiah/smartmetercms/publish/az/Humanizer.resources.dll
@@ -239,14 +248,14 @@
 /home/josiah/smartmetercms/publish/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
 /home/josiah/smartmetercms/publish/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
 /home/josiah/smartmetercms/publish/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
-/home/josiah/smartmetercms/publish/runtimes/browser-wasm/nativeassets/net9.0/e_sqlite3.a
+/home/josiah/smartmetercms/publish/runtimes/win/lib/net7.0/Microsoft.Win32.SystemEvents.dll
+/home/josiah/smartmetercms/publish/runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a
 /home/josiah/smartmetercms/publish/runtimes/linux-arm/native/libe_sqlite3.so
 /home/josiah/smartmetercms/publish/runtimes/linux-arm64/native/libe_sqlite3.so
 /home/josiah/smartmetercms/publish/runtimes/linux-armel/native/libe_sqlite3.so
 /home/josiah/smartmetercms/publish/runtimes/linux-mips64/native/libe_sqlite3.so
 /home/josiah/smartmetercms/publish/runtimes/linux-musl-arm/native/libe_sqlite3.so
 /home/josiah/smartmetercms/publish/runtimes/linux-musl-arm64/native/libe_sqlite3.so
-/home/josiah/smartmetercms/publish/runtimes/linux-musl-s390x/native/libe_sqlite3.so
 /home/josiah/smartmetercms/publish/runtimes/linux-musl-x64/native/libe_sqlite3.so
 /home/josiah/smartmetercms/publish/runtimes/linux-ppc64le/native/libe_sqlite3.so
 /home/josiah/smartmetercms/publish/runtimes/linux-s390x/native/libe_sqlite3.so
@@ -260,6 +269,9 @@
 /home/josiah/smartmetercms/publish/runtimes/win-arm64/native/e_sqlite3.dll
 /home/josiah/smartmetercms/publish/runtimes/win-x64/native/e_sqlite3.dll
 /home/josiah/smartmetercms/publish/runtimes/win-x86/native/e_sqlite3.dll
-/home/josiah/smartmetercms/publish/runtimes/win/lib/net8.0/System.Diagnostics.EventLog.Messages.dll
+/home/josiah/smartmetercms/publish/runtimes/win/lib/net7.0/System.Diagnostics.EventLog.Messages.dll
+/home/josiah/smartmetercms/publish/runtimes/win/lib/net7.0/System.Drawing.Common.dll
 /home/josiah/smartmetercms/publish/runtimes/win/lib/net6.0/System.Runtime.Caching.dll
+/home/josiah/smartmetercms/publish/runtimes/win/lib/net7.0/System.Security.Cryptography.ProtectedData.dll
+/home/josiah/smartmetercms/publish/runtimes/win/lib/net7.0/System.Windows.Extensions.dll
 /home/josiah/smartmetercms/publish/smartmetercms.deps.json
