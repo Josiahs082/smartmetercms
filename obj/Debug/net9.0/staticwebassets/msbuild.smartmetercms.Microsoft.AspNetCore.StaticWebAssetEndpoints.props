@@ -16,13 +16,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\customerdashboard.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ce9ev3gz88"},{"Name":"integrity","Value":"sha256-7K2fLS5zQb/G5h5bCusrPgTd6TcmuQNYNeLVMkHPS2I="},{"Name":"label","Value":"_content/smartmetercms/css/customerdashboard.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3600"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00227K2fLS5zQb/G5h5bCusrPgTd6TcmuQNYNeLVMkHPS2I=\u0022"},{"Name":"Last-Modified","Value":"Tue, 01 Apr 2025 21:09:26 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3600"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00227K2fLS5zQb/G5h5bCusrPgTd6TcmuQNYNeLVMkHPS2I=\u0022"},{"Name":"Last-Modified","Value":"Fri, 23 May 2025 13:29:42 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/smartmetercms/css/customerdashboard.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\customerdashboard.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-7K2fLS5zQb/G5h5bCusrPgTd6TcmuQNYNeLVMkHPS2I="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3600"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00227K2fLS5zQb/G5h5bCusrPgTd6TcmuQNYNeLVMkHPS2I=\u0022"},{"Name":"Last-Modified","Value":"Tue, 01 Apr 2025 21:09:26 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3600"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00227K2fLS5zQb/G5h5bCusrPgTd6TcmuQNYNeLVMkHPS2I=\u0022"},{"Name":"Last-Modified","Value":"Fri, 23 May 2025 13:29:42 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/smartmetercms/css/energyusageindex.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\energyusageindex.css'))</AssetFile>
@@ -59,6 +59,18 @@
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-lyYBskEy3cXLe7064sW0qeU4Q3UMg0pHwwHRUed6oAk="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1351"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022lyYBskEy3cXLe7064sW0qeU4Q3UMg0pHwwHRUed6oAk=\u0022"},{"Name":"Last-Modified","Value":"Sun, 12 Jan 2025 21:05:41 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/smartmetercms/css/payments.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\payments.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-msMkGoh8duTZxAwUcpFzSzl9fVtzn3ZKN5FPXVPlRAQ="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1717"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022msMkGoh8duTZxAwUcpFzSzl9fVtzn3ZKN5FPXVPlRAQ=\u0022"},{"Name":"Last-Modified","Value":"Fri, 23 May 2025 15:24:40 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/smartmetercms/css/payments.umv9wp96xi.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\payments.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"umv9wp96xi"},{"Name":"integrity","Value":"sha256-msMkGoh8duTZxAwUcpFzSzl9fVtzn3ZKN5FPXVPlRAQ="},{"Name":"label","Value":"_content/smartmetercms/css/payments.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1717"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022msMkGoh8duTZxAwUcpFzSzl9fVtzn3ZKN5FPXVPlRAQ=\u0022"},{"Name":"Last-Modified","Value":"Fri, 23 May 2025 15:24:40 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/smartmetercms/css/paymentsindex.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\paymentsindex.css'))</AssetFile>

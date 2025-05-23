@@ -281,7 +281,7 @@
             </table>
             @if (Model.Bills.Any(b => !b.PaidStatus))
             {
-                <a href="/PayBill" class="btn btn-primary">Pay Bill</a>
+                <a asp-controller="Payments" asp-action="Index" class="btn btn-primary">Pay Bill</a>
             }
         }
         else

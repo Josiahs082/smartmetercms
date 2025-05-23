@@ -25,6 +25,10 @@
       "PackagePath": "staticwebassets/css/login.css"
     },
     {
+      "Id": "/home/josiah/smartmetercms/wwwroot/css/payments.css",
+      "PackagePath": "staticwebassets/css/payments.css"
+    },
+    {
       "Id": "/home/josiah/smartmetercms/wwwroot/css/paymentsindex.css",
       "PackagePath": "staticwebassets/css/paymentsindex.css"
     },

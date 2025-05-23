@@ -1,42 +1,61 @@
-@model smartmetercms.Models.Payments
-
+@model smartmetercms.Models.Bill
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Bill Details";
 }
 
-<h1>Details</h1>
-
+<h2>Bill Details</h2>
 <div>
-    <h4>Payments</h4>
+    <h4>Bill</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BillID)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BillID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AmountPaid)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AmountPaid)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PaymentDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PaymentDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PaymentMethod)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PaymentMethod)
-        </dd>
+        <dt class="col-sm-2">Meter ID</dt>
+        <dd class="col-sm-10">@Model.MeterID</dd>
+        <dt class="col-sm-2">Billing Period Start</dt>
+        <dd class="col-sm-10">@Model.BillingPeriodStart.ToString("yyyy-MM-dd")</dd>
+        <dt class="col-sm-2">Billing Period End</dt>
+        <dd class="col-sm-10">@Model.BillingPeriodEnd.ToString("yyyy-MM-dd")</dd>
+        <dt class="col-sm-2">Total Energy Used (kWh)</dt>
+        <dd class="col-sm-10">@Model.TotalEnergyUsed</dd>
+        <dt class="col-sm-2">Amount Due</dt>
+        <dd class="col-sm-10">@Model.AmountDue</dd>
+        <dt class="col-sm-2">Paid Status</dt>
+        <dd class="col-sm-10">@(Model.PaidStatus ? "Paid" : "Unpaid")</dd>
+        <dt class="col-sm-2">Payment Date</dt>
+        <dd class="col-sm-10">@(Model.PaymentDate?.ToString("yyyy-MM-dd") ?? "Not Paid")</dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <h4>Payments</h4>
+    @if (Model.Payments.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Date</th>
+                    <th>Payment Method</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var payment in Model.Payments)
+                {
+                    <tr>
+                        <td>@payment.ID</td>
+                        <td>@payment.AmountPaid</td>
+                        <td>@payment.PaymentDate.ToString("yyyy-MM-dd")</td>
+                        <td>@payment.PaymentMethod</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No payments recorded for this bill.</p>
+    }
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

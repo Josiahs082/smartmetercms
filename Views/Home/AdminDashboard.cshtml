@@ -4,3 +4,16 @@
 
 <h2>Admin Dashboard</h2>
 <p>Welcome, Admin. Here you can manage users, meters, and more.</p>
+
+<h3>Generate Bills</h3>
+<form asp-controller="Bill" asp-action="GenerateBills" method="post">
+    <div class="form-group">
+        <label for="startDate">Billing Period Start</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="endDate">Billing Period End</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Generate Bills</button>
+</form>

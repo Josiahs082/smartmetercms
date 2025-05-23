@@ -1,54 +1,42 @@
-@model IEnumerable<smartmetercms.Models.Payments>
-
+@model IEnumerable<smartmetercms.Models.Bill>
+<link href="~/css/payments.css" rel="stylesheet" />
 @{
-    ViewData["Title"] = "Payments";
+    ViewData["Title"] = "Pay Bills";
 }
-<link href="~/css/paymentsindex.css" rel="stylesheet" />
 
-<h1>Payments</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BillID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountPaid)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentMethod)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BillID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountPaid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentMethod)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <h2>Pay Bills</h2>
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Billing Period Start</th>
+                    <th>Billing Period End</th>
+                    <th>Total Energy Used (kWh)</th>
+                    <th>Amount Due</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bill in Model)
+                {
+                    <tr>
+                        <td>@bill.BillingPeriodStart.ToString("yyyy-MM-dd")</td>
+                        <td>@bill.BillingPeriodEnd.ToString("yyyy-MM-dd")</td>
+                        <td>@bill.TotalEnergyUsed</td>
+                        <td>@bill.AmountDue</td>
+                        <td>
+                            <a asp-action="Pay" asp-route-id="@bill.ID" class="btn btn-primary">Pay Now</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No unpaid bills found.</p>
+    }
+    <a asp-controller="Home" asp-action="CustomerDashboard" class="btn btn-secondary">Back to Dashboard</a>
+</div>

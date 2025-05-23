@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using smartmetercms.Data;
 
@@ -10,9 +11,11 @@ using smartmetercms.Data;
 namespace smartmetercms.Migrations
 {
     [DbContext(typeof(smartmetercmsContext))]
-    partial class smartmetercmsContextModelSnapshot : ModelSnapshot
+    [Migration("20250523153135_AddBillNavigationToPayments")]
+    partial class AddBillNavigationToPayments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");

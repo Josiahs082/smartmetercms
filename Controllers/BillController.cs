@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using smartmetercms.Data;
 using smartmetercms.Models;
@@ -13,6 +12,7 @@ namespace smartmetercms.Controllers
     public class BillController : Controller
     {
         private readonly smartmetercmsContext _context;
+        private const decimal RatePerKWh = 0.15m; // $0.15 per kWh
 
         public BillController(smartmetercmsContext context)
         {
@@ -34,6 +34,7 @@ namespace smartmetercms.Controllers
             }
 
             var bill = await _context.Bill
+                .Include(b => b.Payments)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (bill == null)
             {
@@ -50,8 +51,6 @@ namespace smartmetercms.Controllers
         }
 
         // POST: Bill/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,MeterID,BillingPeriodStart,BillingPeriodEnd,TotalEnergyUsed,AmountDue,PaidStatus,PaymentDate")] Bill bill)
@@ -82,8 +81,6 @@ namespace smartmetercms.Controllers
         }
 
         // POST: Bill/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,MeterID,BillingPeriodStart,BillingPeriodEnd,TotalEnergyUsed,AmountDue,PaidStatus,PaymentDate")] Bill bill)
@@ -145,6 +142,39 @@ namespace smartmetercms.Controllers
                 _context.Bill.Remove(bill);
             }
 
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Bill/GenerateBills
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GenerateBills(DateTime startDate, DateTime endDate)
+        {
+            var users = await _context.User.ToListAsync();
+            foreach (var user in users)
+            {
+                var energyUsage = await _context.IntervalEnergyUsage
+                    .Where(ieu => ieu.MeterID == user!.MeterID &&
+                                 ieu.Timestamp >= startDate &&
+                                 ieu.Timestamp <= endDate)
+                    .SumAsync(ieu => ieu.EnergyUsed);
+
+                if (energyUsage > 0)
+                {
+                    var bill = new Bill
+                    {
+                        MeterID = user!.MeterID,
+                        BillingPeriodStart = startDate,
+                        BillingPeriodEnd = endDate,
+                        TotalEnergyUsed = energyUsage,
+                        AmountDue = (decimal)energyUsage * RatePerKWh,
+                        PaidStatus = false,
+                        PaymentDate = null
+                    };
+                    _context.Bill.Add(bill);
+                }
+            }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

@@ -76,10 +76,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9BZG1pbkRhc2hib2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/josiah/smartmetercms/Views/Home/CustomerDashboard copy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9DdXN0b21lckRhc2hib2FyZCBjb3B5LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [/home/josiah/smartmetercms/Views/Home/CustomerDashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9DdXN0b21lckRhc2hib2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -130,6 +126,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/home/josiah/smartmetercms/Views/Payments/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5bWVudHMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/josiah/smartmetercms/Views/Payments/Pay.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5bWVudHMvUGF5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/josiah/smartmetercms/Views/Shared/Error.cshtml]
