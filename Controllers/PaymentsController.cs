@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using smartmetercms.Data;
 using smartmetercms.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace smartmetercms.Controllers
 {
@@ -22,7 +21,16 @@ namespace smartmetercms.Controllers
         // GET: Payments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Payments.ToListAsync());
+            var meterID = HttpContext.Session.GetString("MeterID");
+            if (meterID == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var bills = await _context.Bill
+                .Where(b => b.MeterID == meterID && !b.PaidStatus)
+                .ToListAsync();
+            return View(bills);
         }
 
         // GET: Payments/Details/5
@@ -33,25 +41,101 @@ namespace smartmetercms.Controllers
                 return NotFound();
             }
 
-            var payments = await _context.Payments
+            var payment = await _context.Payments
+                .Include(p => p.Bill)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (payments == null)
+            if (payment == null)
             {
                 return NotFound();
             }
 
-            return View(payments);
+            return View(payment);
+        }
+
+        // GET: Payments/Pay/5
+        public async Task<IActionResult> Pay(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var bill = await _context.Bill.FindAsync(id);
+            if (bill == null)
+            {
+                return NotFound("Bill not found.");
+            }
+
+            if (bill.PaidStatus)
+            {
+                return BadRequest("Bill is already paid.");
+            }
+
+            var meterID = HttpContext.Session.GetString("MeterID");
+            if (bill.MeterID != meterID)
+            {
+                return Unauthorized("You are not authorized to pay this bill.");
+            }
+
+            ViewData["PaymentMethods"] = new[] { "Credit Card", "Bank Transfer", "PayPal" };
+            return View(bill);
+        }
+
+        // POST: Payments/Pay/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pay(int id, string paymentMethod)
+        {
+            var bill = await _context.Bill.FindAsync(id);
+            if (bill == null)
+            {
+                return NotFound("Bill not found.");
+            }
+
+            if (bill.PaidStatus)
+            {
+                return BadRequest("Bill is already paid.");
+            }
+
+            var meterID = HttpContext.Session.GetString("MeterID");
+            if (bill.MeterID != meterID)
+            {
+                return Unauthorized("You are not authorized to pay this bill.");
+            }
+
+            if (string.IsNullOrEmpty(paymentMethod))
+            {
+                ViewData["PaymentMethods"] = new[] { "Credit Card", "Bank Transfer", "PayPal" };
+                ModelState.AddModelError("PaymentMethod", "Please select a payment method.");
+                return View(bill);
+            }
+
+            var payment = new Payments
+            {
+                BillID = bill.ID,
+                AmountPaid = bill.AmountDue,
+                PaymentDate = DateTime.Now,
+                PaymentMethod = paymentMethod
+            };
+
+            bill.PaidStatus = true;
+            bill.PaymentDate = payment.PaymentDate;
+
+            _context.Payments.Add(payment);
+            _context.Bill.Update(bill);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("CustomerDashboard", "Home");
         }
 
         // GET: Payments/Create
         public IActionResult Create()
         {
+            ViewData["BillID"] = new SelectList(_context.Bill, "ID", "ID");
             return View();
         }
 
         // POST: Payments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,BillID,AmountPaid,PaymentDate,PaymentMethod")] Payments payments)
@@ -62,6 +146,7 @@ namespace smartmetercms.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BillID"] = new SelectList(_context.Bill, "ID", "ID", payments.BillID);
             return View(payments);
         }
 
@@ -78,12 +163,11 @@ namespace smartmetercms.Controllers
             {
                 return NotFound();
             }
+            ViewData["BillID"] = new SelectList(_context.Bill, "ID", "ID", payments.BillID);
             return View(payments);
         }
 
         // POST: Payments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,BillID,AmountPaid,PaymentDate,PaymentMethod")] Payments payments)
@@ -113,6 +197,7 @@ namespace smartmetercms.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BillID"] = new SelectList(_context.Bill, "ID", "ID", payments.BillID);
             return View(payments);
         }
 
@@ -125,6 +210,7 @@ namespace smartmetercms.Controllers
             }
 
             var payments = await _context.Payments
+                .Include(p => p.Bill)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (payments == null)
             {

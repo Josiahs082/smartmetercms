@@ -1,0 +1,47 @@
+@model smartmetercms.Models.Bill
+<link href="~/css/payments.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = "Pay Bill";
+}
+
+<div class="container">
+    <h2>Pay Bill</h2>
+    @if (Model == null)
+    {
+        <p class="text-danger">Error: Bill data is missing.</p>
+    }
+    else
+    {
+        <div class="payment-details">
+            <p>Paying bill for period @Model.BillingPeriodStart.ToString("yyyy-MM-dd") to @Model.BillingPeriodEnd.ToString("yyyy-MM-dd")</p>
+            <p>Amount Due: @Model.AmountDue</p>
+        </div>
+        <form asp-action="Pay" asp-route-id="@Model.ID" method="post" class="payment-form">
+            <div class="form-group">
+                <label for="paymentMethod">Payment Method</label>
+                <select id="paymentMethod" name="paymentMethod" class="form-control">
+                    <option value="">Select a payment method</option>
+                    @if (ViewData["PaymentMethods"] != null)
+                    {
+                        @foreach (var method in ViewData["PaymentMethods"] as string[])
+                        {
+                            <option value="@method">@method</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="PayPal">PayPal</option>
+                    }
+                </select>
+                @if (!string.IsNullOrEmpty(ViewData.ModelState["PaymentMethod"]?.Errors.FirstOrDefault()?.ErrorMessage))
+                {
+                    <span class="text-danger">@ViewData.ModelState["PaymentMethod"].Errors.First().ErrorMessage</span>
+                }
+            </div>
+            <button type="submit" class="btn btn-primary">Confirm Payment</button>
+            <a asp-controller="Payments" asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    }
+</div>
