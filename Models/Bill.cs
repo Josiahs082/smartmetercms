@@ -8,17 +8,19 @@ namespace smartmetercms.Models
     public class Bill
     {
         [Key]
-        public int ID { get; set; } // Primary Key
-        [ForeignKey("User")]
-        public string MeterID { get; set; } = null!; // Foreign Key to Users
+        public int ID { get; set; }
+        public string MeterID { get; set; } = null!;
         public DateTime BillingPeriodStart { get; set; }
         public DateTime BillingPeriodEnd { get; set; }
-        public double TotalEnergyUsed { get; set; } // kWh
-        public decimal AmountDue { get; set; }
-        public bool PaidStatus { get; set; }
-        public DateTime? PaymentDate { get; set; } // Nullable if not paid
+        public float TotalEnergyUsed { get; set; }
 
-        public User? User { get; set; } // Navigation property for related User
-        public List<Payments> Payments { get; set; } = new List<Payments>(); // Navigation property for related Payments
+        [Column(TypeName = "decimal(18,2)")]
+        [Range(0, 9999999999999999.99)]
+        public decimal AmountDue { get; set; }
+
+        public bool PaidStatus { get; set; }
+        public DateTime? PaymentDate { get; set; }
+
+        public List<Payments>? Payments { get; set; }
     }
 }

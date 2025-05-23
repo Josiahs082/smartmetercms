@@ -14,7 +14,7 @@
     {
         <div class="payment-details">
             <p>Paying bill for period @Model.BillingPeriodStart.ToString("yyyy-MM-dd") to @Model.BillingPeriodEnd.ToString("yyyy-MM-dd")</p>
-            <p>Amount Due: @Model.AmountDue</p>
+            <p>Amount Due: @Model.AmountDue.ToString("C2")</p>
         </div>
         <form asp-action="Pay" asp-route-id="@Model.ID" method="post" class="payment-form">
             <div class="form-group">

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using smartmetercms.Data;
 using smartmetercms.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace smartmetercms.Controllers
 {
@@ -18,90 +17,43 @@ namespace smartmetercms.Controllers
             _context = context;
         }
 
-        // GET: Payments
         public async Task<IActionResult> Index()
         {
             var meterID = HttpContext.Session.GetString("MeterID");
-            if (meterID == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            var bills = await _context.Bill
-                .Where(b => b.MeterID == meterID && !b.PaidStatus)
-                .ToListAsync();
+            if (meterID == null) return RedirectToAction("Login", "Home");
+            var bills = await _context.Bill.Where(b => b.MeterID == meterID && !b.PaidStatus).ToListAsync();
             return View(bills);
         }
 
-        // GET: Payments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var payment = await _context.Payments
-                .Include(p => p.Bill)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (payment == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
+            var payment = await _context.Payments.Include(p => p.Bill).FirstOrDefaultAsync(m => m.ID == id);
+            if (payment == null) return NotFound();
             return View(payment);
         }
 
-        // GET: Payments/Pay/5
         public async Task<IActionResult> Pay(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var bill = await _context.Bill.FindAsync(id);
-            if (bill == null)
-            {
-                return NotFound("Bill not found.");
-            }
-
-            if (bill.PaidStatus)
-            {
-                return BadRequest("Bill is already paid.");
-            }
-
+            if (bill == null) return NotFound("Bill not found.");
+            if (bill.PaidStatus) return BadRequest("Bill is already paid.");
             var meterID = HttpContext.Session.GetString("MeterID");
-            if (bill.MeterID != meterID)
-            {
-                return Unauthorized("You are not authorized to pay this bill.");
-            }
-
+            if (bill.MeterID != meterID) return Unauthorized("You are not authorized to pay this bill.");
             ViewData["PaymentMethods"] = new[] { "Credit Card", "Bank Transfer", "PayPal" };
             return View(bill);
         }
 
-        // POST: Payments/Pay/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Pay(int id, decimal paymentAmount, string paymentMethod)
         {
             var bill = await _context.Bill.FindAsync(id);
-            if (bill == null)
-            {
-                return NotFound("Bill not found.");
-            }
-
-            if (bill.PaidStatus)
-            {
-                return BadRequest("Bill is already paid.");
-            }
-
+            if (bill == null) return NotFound("Bill not found.");
+            if (bill.PaidStatus) return BadRequest("Bill is already paid.");
             var meterID = HttpContext.Session.GetString("MeterID");
-            if (bill.MeterID != meterID)
-            {
-                return Unauthorized("You are not authorized to pay this bill.");
-            }
+            if (bill.MeterID != meterID) return Unauthorized("You are not authorized to pay this bill.");
 
             if (string.IsNullOrEmpty(paymentMethod))
             {
@@ -120,13 +72,13 @@ namespace smartmetercms.Controllers
             var payment = new Payments
             {
                 BillID = bill.ID,
-                AmountPaid = paymentAmount,
+                AmountPaid = Math.Round(paymentAmount, 2),
                 PaymentDate = DateTime.Now,
                 PaymentMethod = paymentMethod
             };
 
-            bill.AmountDue -= paymentAmount;
-            bill.PaidStatus = bill.AmountDue <= 0;
+            bill.AmountDue = Math.Round(bill.AmountDue - paymentAmount, 2);
+            bill.PaidStatus = bill.AmountDue <= 0.01m; // Tolerance for small residuals
 
             if (bill.PaidStatus)
             {
@@ -140,109 +92,70 @@ namespace smartmetercms.Controllers
             return RedirectToAction("CustomerDashboard", "Home");
         }
 
-        // GET: Payments/Create
         public IActionResult Create()
         {
-            ViewData["BillID"] = new SelectList(_context.Bill, "ID", "ID");
             return View();
         }
 
-        // POST: Payments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,BillID,AmountPaid,PaymentDate,PaymentMethod")] Payments payments)
         {
             if (ModelState.IsValid)
             {
+                payments.AmountPaid = Math.Round(payments.AmountPaid, 2);
                 _context.Add(payments);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BillID"] = new SelectList(_context.Bill, "ID", "ID", payments.BillID);
             return View(payments);
         }
 
-        // GET: Payments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var payments = await _context.Payments.FindAsync(id);
-            if (payments == null)
-            {
-                return NotFound();
-            }
-            ViewData["BillID"] = new SelectList(_context.Bill, "ID", "ID", payments.BillID);
+            if (payments == null) return NotFound();
             return View(payments);
         }
 
-        // POST: Payments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,BillID,AmountPaid,PaymentDate,PaymentMethod")] Payments payments)
         {
-            if (id != payments.ID)
-            {
-                return NotFound();
-            }
-
+            if (id != payments.ID) return NotFound();
             if (ModelState.IsValid)
             {
                 try
                 {
+                    payments.AmountPaid = Math.Round(payments.AmountPaid, 2);
                     _context.Update(payments);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PaymentsExists(payments.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!PaymentsExists(payments.ID)) return NotFound();
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BillID"] = new SelectList(_context.Bill, "ID", "ID", payments.BillID);
             return View(payments);
         }
 
-        // GET: Payments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var payments = await _context.Payments
-                .Include(p => p.Bill)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (payments == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
+            var payments = await _context.Payments.Include(p => p.Bill).FirstOrDefaultAsync(m => m.ID == id);
+            if (payments == null) return NotFound();
             return View(payments);
         }
 
-        // POST: Payments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var payments = await _context.Payments.FindAsync(id);
-            if (payments != null)
-            {
-                _context.Payments.Remove(payments);
-            }
-
+            if (payments != null) _context.Payments.Remove(payments);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

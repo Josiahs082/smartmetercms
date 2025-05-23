@@ -1,78 +1,94 @@
-using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using smartmetercms.Models;
-using smartmetercms.Data;
 using Microsoft.EntityFrameworkCore;
+using smartmetercms.Data;
+using smartmetercms.Models;
 
-namespace smartmetercms.Controllers;
-
-public class HomeController : Controller
+namespace smartmetercms.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly smartmetercmsContext _context;
-
-    public HomeController(ILogger<HomeController> logger, smartmetercmsContext context)
+    public class HomeController : Controller
     {
-        _logger = logger;
-        _context = context;
-    }
+        private readonly smartmetercmsContext _context;
 
-    public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    public IActionResult AdminDashboard()
-    {
-        if (HttpContext.Session.GetString("MeterID") == null || 
-            _context.User.FirstOrDefault(u => u.MeterID == HttpContext.Session.GetString("MeterID"))?.Role != "Admin")
+        public HomeController(smartmetercmsContext context)
         {
-            return RedirectToAction("Login", "Account");
-        }
-        return View();
-    }
-
-    public async Task<IActionResult> CustomerDashboard()
-    {
-        var meterID = HttpContext.Session.GetString("MeterID");
-        if (meterID == null || 
-            (await _context.User.FirstOrDefaultAsync(u => u.MeterID == meterID))?.Role != "Customer")
-        {
-            return RedirectToAction("Login", "Account");
+            _context = context;
         }
 
-        var user = await _context.User
-            .Where(u => u.MeterID == meterID)
-            .Include(u => u.Bills)
-            .Include(u => u.EnergyUsages)
-            .Include(u => u.IntervalEnergyUsages)
-            .FirstOrDefaultAsync();
-
-        if (user == null)
+        public IActionResult Index()
         {
-            return NotFound();
+            return View();
         }
 
-        return View(user);
-    }
+        public IActionResult Login()
+        {
+            return View();
+        }
 
-    [HttpPost]
-    public IActionResult Logout()
-    {
-        // Clear the session
-        HttpContext.Session.Clear();
-        // Redirect to Index action
-        return RedirectToAction("Index");
-    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string meterID, string password)
+        {
+            var user = await _context.User
+                .FirstOrDefaultAsync(u => u.MeterID == meterID && u.Password == password);
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (user != null)
+            {
+                HttpContext.Session.SetString("MeterID", user.MeterID ?? "");
+                HttpContext.Session.SetString("Role", user.Role ?? "");
+
+                if (user.Role == "Admin")
+                {
+                    return RedirectToAction("AdminDashboard");
+                }
+                return RedirectToAction("CustomerDashboard");
+            }
+
+            ViewData["Error"] = "Invalid Meter ID or password.";
+            return View();
+        }
+
+        public async Task<IActionResult> CustomerDashboard()
+        {
+            var meterID = HttpContext.Session.GetString("MeterID");
+            if (string.IsNullOrEmpty(meterID))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await _context.User
+                .Include(u => u.IntervalEnergyUsages)
+                .FirstOrDefaultAsync(u => u.MeterID == meterID);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            user.Bills = await _context.Bill
+                .Where(b => b.MeterID == meterID)
+                .ToListAsync();
+
+            return View(user);
+        }
+
+        public IActionResult AdminDashboard()
+        {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Admin")
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
+        }
     }
 }
