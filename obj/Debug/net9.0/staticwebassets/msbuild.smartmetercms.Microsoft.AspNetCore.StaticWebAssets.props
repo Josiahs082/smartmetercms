@@ -102,8 +102,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>umv9wp96xi</Fingerprint>
-      <Integrity>msMkGoh8duTZxAwUcpFzSzl9fVtzn3ZKN5FPXVPlRAQ=</Integrity>
+      <Fingerprint>0tmaf1tdbx</Fingerprint>
+      <Integrity>9LQP5cgnYpZso/GPhA7d3WYX/ajrXXWxKUUVDJtLuvo=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\payments.css'))</OriginalItemSpec>

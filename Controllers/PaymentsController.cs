@@ -84,7 +84,7 @@ namespace smartmetercms.Controllers
         // POST: Payments/Pay/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Pay(int id, string paymentMethod)
+        public async Task<IActionResult> Pay(int id, decimal paymentAmount, string paymentMethod)
         {
             var bill = await _context.Bill.FindAsync(id);
             if (bill == null)
@@ -110,16 +110,28 @@ namespace smartmetercms.Controllers
                 return View(bill);
             }
 
+            if (paymentAmount <= 0 || paymentAmount > bill.AmountDue)
+            {
+                ViewData["PaymentMethods"] = new[] { "Credit Card", "Bank Transfer", "PayPal" };
+                ModelState.AddModelError("PaymentAmount", "Payment amount must be between 0.01 and the amount due.");
+                return View(bill);
+            }
+
             var payment = new Payments
             {
                 BillID = bill.ID,
-                AmountPaid = bill.AmountDue,
+                AmountPaid = paymentAmount,
                 PaymentDate = DateTime.Now,
                 PaymentMethod = paymentMethod
             };
 
-            bill.PaidStatus = true;
-            bill.PaymentDate = payment.PaymentDate;
+            bill.AmountDue -= paymentAmount;
+            bill.PaidStatus = bill.AmountDue <= 0;
+
+            if (bill.PaidStatus)
+            {
+                bill.PaymentDate = payment.PaymentDate;
+            }
 
             _context.Payments.Add(payment);
             _context.Bill.Update(bill);
