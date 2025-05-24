@@ -1,0 +1,43 @@
+@model IEnumerable<smartmetercms.Models.PowerQuality>
+
+@{
+    ViewData["Title"] = "Power Quality Data";
+}
+<link href="~/css/powerqualityindex.css" rel="stylesheet" />
+
+<h1>Power Quality Records</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.MeterID)</th>
+            <th>@Html.DisplayNameFor(model => model.PowerFactor)</th>
+            <th>@Html.DisplayNameFor(model => model.Frequency)</th>
+            <th>@Html.DisplayNameFor(model => model.Voltage)</th>
+            <th>@Html.DisplayNameFor(model => model.InstantaneousPower)</th>
+            <th>@Html.DisplayNameFor(model => model.Timestamp)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.MeterID)</td>
+            <td>@Html.DisplayFor(modelItem => item.PowerFactor)</td>
+            <td>@Html.DisplayFor(modelItem => item.Frequency)</td>
+            <td>@Html.DisplayFor(modelItem => item.Voltage)</td>
+            <td>@Html.DisplayFor(modelItem => item.InstantaneousPower)</td>
+            <td>@Html.DisplayFor(modelItem => item.Timestamp)</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

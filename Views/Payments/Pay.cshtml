@@ -22,7 +22,12 @@
                 <input type="number" id="paymentAmount" name="paymentAmount" class="form-control" step="0.01" min="0.01" max="@Model.AmountDue" required />
                 @if (!string.IsNullOrEmpty(ViewData.ModelState["PaymentAmount"]?.Errors.FirstOrDefault()?.ErrorMessage))
                 {
-                    <span class="text-danger">@ViewData.ModelState["PaymentAmount"].Errors.First().ErrorMessage</span>
+                    @if (ViewData.ModelState.TryGetValue("PaymentAmount", out var paymentAmountState) &&
+                        paymentAmountState.Errors.Count > 0)
+                    {
+                        <span class="text-danger">@paymentAmountState.Errors[0].ErrorMessage</span>
+                    }
+
                 }
             </div>
             <div class="form-group">

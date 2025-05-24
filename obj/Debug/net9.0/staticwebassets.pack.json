@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets/css/paymentsindex.css"
     },
     {
+      "Id": "/home/josiah/smartmetercms/wwwroot/css/powerqualityindex.css",
+      "PackagePath": "staticwebassets/css/powerqualityindex.css"
+    },
+    {
       "Id": "/home/josiah/smartmetercms/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },

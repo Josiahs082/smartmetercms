@@ -9,7 +9,7 @@ namespace smartmetercms.Data
 {
     public class smartmetercmsContext : DbContext
     {
-        public smartmetercmsContext (DbContextOptions<smartmetercmsContext> options)
+        public smartmetercmsContext(DbContextOptions<smartmetercmsContext> options)
             : base(options)
         {
         }
@@ -19,5 +19,7 @@ namespace smartmetercms.Data
         public DbSet<smartmetercms.Models.Bill> Bill { get; set; } = default!;
         public DbSet<smartmetercms.Models.Payments> Payments { get; set; } = default!;
         public DbSet<smartmetercms.Models.IntervalEnergyUsage> IntervalEnergyUsage { get; set; } = default!;
+        public DbSet<smartmetercms.Models.PowerQuality> PowerQuality { get; set; }
+
     }
 }
