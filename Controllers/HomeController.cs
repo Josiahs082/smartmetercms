@@ -2,8 +2,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using smartmetercms.Data;
-using smartmetercms.Models;
 
 namespace smartmetercms.Controllers
 {
@@ -21,40 +21,12 @@ namespace smartmetercms.Controllers
             return View();
         }
 
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string meterID, string password)
-        {
-            var user = await _context.User
-                .FirstOrDefaultAsync(u => u.MeterID == meterID && u.Password == password);
-
-            if (user != null)
-            {
-                HttpContext.Session.SetString("MeterID", user.MeterID ?? "");
-                HttpContext.Session.SetString("Role", user.Role ?? "");
-
-                if (user.Role == "Admin")
-                {
-                    return RedirectToAction("AdminDashboard");
-                }
-                return RedirectToAction("CustomerDashboard");
-            }
-
-            ViewData["Error"] = "Invalid Meter ID or password.";
-            return View();
-        }
-
         public async Task<IActionResult> CustomerDashboard()
         {
             var meterID = HttpContext.Session.GetString("MeterID");
             if (string.IsNullOrEmpty(meterID))
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Login", "Account");
             }
 
             var user = await _context.User
@@ -78,8 +50,9 @@ namespace smartmetercms.Controllers
             var role = HttpContext.Session.GetString("Role");
             if (role != "Admin")
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Login", "Account");
             }
+
             return View();
         }
 
