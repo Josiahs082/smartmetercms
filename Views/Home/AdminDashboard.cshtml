@@ -2,18 +2,105 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h2>Admin Dashboard</h2>
-<p>Welcome, Admin. Here you can manage users, meters, and more.</p>
+<link rel="stylesheet" href="~/css/admindashboard.css" />
 
-<h3>Generate Bills</h3>
-<form asp-controller="Bill" asp-action="GenerateBills" method="post">
-    <div class="form-group">
-        <label for="startDate">Billing Period Start</label>
-        <input type="date" id="startDate" name="startDate" class="form-control" required />
-    </div>
-    <div class="form-group">
-        <label for="endDate">Billing Period End</label>
-        <input type="date" id="endDate" name="endDate" class="form-control" required />
-    </div>
-    <button type="submit" class="btn btn-primary">Generate Bills</button>
-</form>
+<div class="admin-dashboard-container">
+    <aside class="admin-sidebar">
+        <h3>Navigation</h3>
+        <button onclick="location.href='@Url.Action("Index", "User")'">Users</button>
+        <button onclick="location.href='@Url.Action("Index", "IntervalEnergyUsage")'">Interval Usage</button>
+        <button onclick="location.href='@Url.Action("Index", "Bill")'">Bills</button>
+        <button onclick="location.href='@Url.Action("Index", "EnergyUsage")'">Energy Usage</button>
+        <button onclick="location.href='@Url.Action("Index", "Payments")'">Payments</button>
+        <button onclick="location.href='@Url.Action("Index", "PowerQuality")'">Power Quality</button>
+    </aside>
+
+    <main class="admin-main-content">
+        <h2>Admin Dashboard</h2>
+        <p>Welcome, Admin. Here you can manage users, meters, and more.</p>
+
+        <section class="generate-bills">
+            <h3>Generate Bills</h3>
+            <form asp-controller="Bill" asp-action="GenerateBills" method="post">
+                <div class="form-group">
+                    <label for="startDate">Billing Period Start</label>
+                    <input type="date" id="startDate" name="startDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="endDate">Billing Period End</label>
+                    <input type="date" id="endDate" name="endDate" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Generate Bills</button>
+            </form>
+        </section>
+
+        <section class="load-demand-section">
+            <h3>Load Demand Visualization</h3>
+            <div class="filter-section">
+                <label for="timeRange">Select Time Range:</label>
+                <select id="timeRange" onchange="loadChartData()">
+                    <option value="day">Daily</option>
+                    <option value="week">Weekly</option>
+                    <option value="month">Monthly</option>
+                </select>
+                <button onclick="exportCsv()">Export CSV</button>
+            </div>
+
+            <canvas id="loadDemandChart" width="800" height="400"></canvas>
+        </section>
+    </main>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let chart;
+
+        function loadChartData() {
+            const range = document.getElementById('timeRange').value;
+
+            fetch(`/Home/LoadDemandChartData?range=${range}`)
+                .then(res => res.json())
+                .then(data => {
+                    const labels = data.map(d => new Date(d.time).toLocaleDateString());
+                    const values = data.map(d => d.totalPower);
+
+                    if (chart) chart.destroy();
+
+                    const ctx = document.getElementById('loadDemandChart').getContext('2d');
+                    chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: `Instantaneous Power (${range})`,
+                                data: values,
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                fill: true,
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { position: 'top' },
+                                title: { display: true, text: `Load Demand (${range})` }
+                            },
+                            scales: {
+                                x: { title: { display: true, text: 'Time' } },
+                                y: { title: { display: true, text: 'Power (kW)' } }
+                            }
+                        }
+                    });
+                });
+        }
+
+        function exportCsv() {
+            const range = document.getElementById('timeRange').value;
+            window.location.href = `/Home/ExportLoadDemandCsv?range=${range}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => loadChartData());
+    </script>
+}

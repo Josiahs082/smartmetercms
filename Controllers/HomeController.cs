@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using smartmetercms.Data;
-
+using smartmetercms.Models;
+using System.Globalization;
 namespace smartmetercms.Controllers
 {
     public class HomeController : Controller
@@ -44,6 +45,80 @@ namespace smartmetercms.Controllers
 
             return View(user);
         }
+
+        //admin powerqualit display stuff
+       
+        [HttpGet]
+        public async Task<IActionResult> LoadDemandChartData(string range = "day")
+        {
+            IQueryable<PowerQuality> data = _context.PowerQuality;
+
+            List<object> grouped = new List<object>();
+
+            if (range == "day")
+            {
+                grouped = await data
+                    .GroupBy(p => new { p.Timestamp.Year, p.Timestamp.Month, p.Timestamp.Day })
+                    .Select(g => new
+                    {
+                        time = new DateTime(g.Key.Year, g.Key.Month, g.Key.Day),
+                        totalPower = g.Sum(p => p.InstantaneousPower)
+                    })
+                    .OrderBy(g => g.time)
+                    .ToListAsync<object>();
+            }
+            else if (range == "week")
+            {
+                grouped = await data
+                    .GroupBy(p => EF.Functions.DateDiffWeek(DateTime.UnixEpoch, p.Timestamp))
+                    .Select(g => new
+                    {
+                        time = DateTime.UnixEpoch.AddDays(g.Key * 7),
+                        totalPower = g.Sum(p => p.InstantaneousPower)
+                    })
+                    .OrderBy(g => g.time)
+                    .ToListAsync<object>();
+            }
+            else if (range == "month")
+            {
+                grouped = await data
+                    .GroupBy(p => new { p.Timestamp.Year, p.Timestamp.Month })
+                    .Select(g => new
+                    {
+                        time = new DateTime(g.Key.Year, g.Key.Month, 1),
+                        totalPower = g.Sum(p => p.InstantaneousPower)
+                    })
+                    .OrderBy(g => g.time)
+                    .ToListAsync<object>();
+            }
+
+            return Json(grouped);
+        }
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> ExportLoadDemandCsv(string range = "day")
+        {
+            var data = await LoadDemandChartData(range) as JsonResult;
+            var list = data?.Value as IEnumerable<dynamic>;
+
+            var csv = new System.Text.StringBuilder();
+            csv.AppendLine("Time,TotalPower");
+
+            foreach (var entry in list!)
+            {
+                csv.AppendLine($"{entry.Time},{entry.TotalPower}");
+            }
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(csv.ToString());
+            return File(bytes, "text/csv", $"LoadDemand_{range}_{DateTime.Now:yyyyMMddHHmmss}.csv");
+        }
+
+
+        
+
 
         public IActionResult AdminDashboard()
         {

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "vo6uDHExe5rZdT2PpNwQPJBzXuoq7nC+Nd5oVNI1oQM=",
+  "Hash": "VbhjaNf8s4Ziailw8MwovLnBNU+1AvdDMzOJUTRys+U=",
   "Source": "smartmetercms",
   "BasePath": "_content/smartmetercms",
   "Mode": "Default",
@@ -1403,6 +1403,27 @@
       "OriginalItemSpec": "/home/josiah/smartmetercms/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css"
     },
     {
+      "Identity": "/home/josiah/smartmetercms/obj/Debug/net9.0/compressed/sybysg0jil-39xzmgpamw.gz",
+      "SourceId": "smartmetercms",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/josiah/smartmetercms/obj/Debug/net9.0/compressed/",
+      "BasePath": "_content/smartmetercms",
+      "RelativePath": "css/admindashboard#[.{fingerprint=39xzmgpamw}]?.css.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "/home/josiah/smartmetercms/wwwroot/css/admindashboard.css",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "wrx5kdhuei",
+      "Integrity": "xE2vPBM3lx6gPSVlqjSm0W0acIELgskdSQkE9Aln7AU=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "/home/josiah/smartmetercms/wwwroot/css/admindashboard.css"
+    },
+    {
       "Identity": "/home/josiah/smartmetercms/obj/Debug/net9.0/compressed/t67fuvnuup-0j3bgjxly4.gz",
       "SourceId": "smartmetercms",
       "SourceType": "Discovered",
@@ -1590,6 +1611,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/home/josiah/smartmetercms/obj/Debug/net9.0/scopedcss/projectbundle/smartmetercms.bundle.scp.css"
+    },
+    {
+      "Identity": "/home/josiah/smartmetercms/wwwroot/css/admindashboard.css",
+      "SourceId": "smartmetercms",
+      "SourceType": "Discovered",
+      "ContentRoot": "/home/josiah/smartmetercms/wwwroot/",
+      "BasePath": "_content/smartmetercms",
+      "RelativePath": "css/admindashboard#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "39xzmgpamw",
+      "Integrity": "6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/admindashboard.css"
     },
     {
       "Identity": "/home/josiah/smartmetercms/wwwroot/css/billindex.css",
@@ -3105,6 +3147,304 @@
     }
   ],
   "Endpoints": [
+    {
+      "Route": "css/admindashboard.39xzmgpamw.css",
+      "AssetFile": "/home/josiah/smartmetercms/obj/Debug/net9.0/compressed/sybysg0jil-39xzmgpamw.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.002994011976"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "333"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xE2vPBM3lx6gPSVlqjSm0W0acIELgskdSQkE9Aln7AU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 16:31:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "39xzmgpamw"
+        },
+        {
+          "Name": "label",
+          "Value": "css/admindashboard.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA="
+        }
+      ]
+    },
+    {
+      "Route": "css/admindashboard.39xzmgpamw.css",
+      "AssetFile": "/home/josiah/smartmetercms/wwwroot/css/admindashboard.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "731"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 16:31:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "39xzmgpamw"
+        },
+        {
+          "Name": "label",
+          "Value": "css/admindashboard.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA="
+        }
+      ]
+    },
+    {
+      "Route": "css/admindashboard.39xzmgpamw.css.gz",
+      "AssetFile": "/home/josiah/smartmetercms/obj/Debug/net9.0/compressed/sybysg0jil-39xzmgpamw.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "333"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xE2vPBM3lx6gPSVlqjSm0W0acIELgskdSQkE9Aln7AU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 16:31:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "39xzmgpamw"
+        },
+        {
+          "Name": "label",
+          "Value": "css/admindashboard.css.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xE2vPBM3lx6gPSVlqjSm0W0acIELgskdSQkE9Aln7AU="
+        }
+      ]
+    },
+    {
+      "Route": "css/admindashboard.css",
+      "AssetFile": "/home/josiah/smartmetercms/obj/Debug/net9.0/compressed/sybysg0jil-39xzmgpamw.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.002994011976"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "333"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xE2vPBM3lx6gPSVlqjSm0W0acIELgskdSQkE9Aln7AU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 16:31:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA="
+        }
+      ]
+    },
+    {
+      "Route": "css/admindashboard.css",
+      "AssetFile": "/home/josiah/smartmetercms/wwwroot/css/admindashboard.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "731"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 16:31:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA="
+        }
+      ]
+    },
+    {
+      "Route": "css/admindashboard.css.gz",
+      "AssetFile": "/home/josiah/smartmetercms/obj/Debug/net9.0/compressed/sybysg0jil-39xzmgpamw.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "333"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xE2vPBM3lx6gPSVlqjSm0W0acIELgskdSQkE9Aln7AU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 24 May 2025 16:31:14 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xE2vPBM3lx6gPSVlqjSm0W0acIELgskdSQkE9Aln7AU="
+        }
+      ]
+    },
     {
       "Route": "css/billindex.css",
       "AssetFile": "/home/josiah/smartmetercms/obj/Debug/net9.0/compressed/5xdn9hiag6-t3hx0hgyue.gz",

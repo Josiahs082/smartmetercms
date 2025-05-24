@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets/smartmetercms.dmul34iguo.bundle.scp.css"
     },
     {
+      "Id": "/home/josiah/smartmetercms/wwwroot/css/admindashboard.css",
+      "PackagePath": "staticwebassets/css/admindashboard.css"
+    },
+    {
       "Id": "/home/josiah/smartmetercms/wwwroot/css/billindex.css",
       "PackagePath": "staticwebassets/css/billindex.css"
     },
