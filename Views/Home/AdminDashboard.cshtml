@@ -1,25 +1,19 @@
+@model IEnumerable<smartmetercms.Models.PowerQuality>
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
 
 <link rel="stylesheet" href="~/css/admindashboard.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
 <div class="admin-dashboard-container">
-    <aside class="admin-sidebar">
-        <h3>Navigation</h3>
-        <button onclick="location.href='@Url.Action("Index", "User")'">Users</button>
-        <button onclick="location.href='@Url.Action("Index", "IntervalEnergyUsage")'">Interval Usage</button>
-        <button onclick="location.href='@Url.Action("Index", "Bill")'">Bills</button>
-        <button onclick="location.href='@Url.Action("Index", "EnergyUsage")'">Energy Usage</button>
-        <button onclick="location.href='@Url.Action("Index", "Payments")'">Payments</button>
-        <button onclick="location.href='@Url.Action("Index", "PowerQuality")'">Power Quality</button>
-    </aside>
-
     <main class="admin-main-content">
         <h2>Admin Dashboard</h2>
         <p>Welcome, Admin. Here you can manage users, meters, and more.</p>
 
-        <section class="generate-bills">
+        <!-- Billing Section -->
+        <section class="billing-section">
             <h3>Generate Bills</h3>
             <form asp-controller="Bill" asp-action="GenerateBills" method="post">
                 <div class="form-group">
@@ -34,73 +28,139 @@
             </form>
         </section>
 
+        <!-- Load Demand Section -->
         <section class="load-demand-section">
             <h3>Load Demand Visualization</h3>
             <div class="filter-section">
-                <label for="timeRange">Select Time Range:</label>
-                <select id="timeRange" onchange="loadChartData()">
-                    <option value="day">Daily</option>
-                    <option value="week">Weekly</option>
-                    <option value="month">Monthly</option>
-                </select>
-                <button onclick="exportCsv()">Export CSV</button>
+                <label for="dateFilter">Select Date:</label>
+                <input type="date" id="dateFilter" value="2025-05-22" onchange="updateChartData()" />
+                <button class="btn-export" onclick="exportCsv()">Export CSV</button>
+            </div>
+            <div id="chart-error" style="color: red; display: none; margin-bottom: 10px;">
+                No data available for the selected date.
             </div>
 
-            <canvas id="loadDemandChart" width="800" height="400"></canvas>
+            @if (Model != null && Model.Any())
+            {
+                <!-- Hidden table to store PowerQuality data -->
+                <table class="table" style="display: none;">
+                    <tbody id="data-table">
+                        @foreach (var pq in Model)
+                        {
+                            <tr class="power-quality-row"
+                                data-timestamp="@pq.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")"
+                                data-power="@pq.InstantaneousPower">
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <!-- Chart -->
+                <div class="chart-container">
+                    <canvas id="loadDemandChart"></canvas>
+                </div>
+
+                <script>
+                    var ctx = document.getElementById('loadDemandChart').getContext('2d');
+                    var loadDemandChart;
+                    var allData = @Html.Raw(Json.Serialize(Model.Select(pq => new
+                    {
+                        timestamp = pq.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"),
+                        power = pq.InstantaneousPower
+                    }).ToArray()));
+
+                    window.onload = function () {
+                        console.log('Loaded data:', allData);
+                        document.getElementById('dateFilter').value = '2025-05-22';
+                        updateChartData();
+                    };
+
+                    function updateChartData() {
+                        const selectedDate = document.getElementById('dateFilter').value;
+                        const errorDiv = document.getElementById('chart-error');
+                        let filteredData = [];
+
+                        try {
+                            filteredData = Array(24).fill(0).map((_, i) => ({ hour: i, power: 0 }));
+                            allData.forEach(d => {
+                                const date = new Date(d.timestamp);
+                                if (d.timestamp.startsWith(selectedDate) && d.power > 0) {
+                                    const hour = date.getHours();
+                                    filteredData[hour].power += d.power;
+                                }
+                            });
+
+                            if (filteredData.every(d => d.power === 0)) {
+                                errorDiv.style.display = 'block';
+                                if (loadDemandChart) loadDemandChart.destroy();
+                                return;
+                            }
+
+                            errorDiv.style.display = 'none';
+                            updateChart(filteredData);
+                        } catch (err) {
+                            console.error('Error updating chart:', err);
+                            errorDiv.style.display = 'block';
+                            if (loadDemandChart) loadDemandChart.destroy();
+                        }
+                    }
+
+                    function updateChart(data) {
+                        if (loadDemandChart) loadDemandChart.destroy();
+
+                        const labels = data.map(d => `${d.hour}:00`);
+                        const xTitle = 'Hour';
+
+                        loadDemandChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Instantaneous Power (Hourly)',
+                                    data: data.map(d => d.power),
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    fill: true,
+                                    tension: 0.3
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { position: 'top' },
+                                    title: { display: true, text: 'Hourly Load Demand' }
+                                },
+                                scales: {
+                                    x: { title: { display: true, text: xTitle } },
+                                    y: { title: { display: true, text: 'Power (W)' }, beginAtZero: true }
+                                }
+                            }
+                        });
+                    }
+
+                    function exportCsv() {
+                        const date = document.getElementById('dateFilter').value || '2025-05-22';
+                        window.location.href = `/Home/ExportLoadDemandCsv?date=${date}&range=hour`;
+                    }
+                </script>
+            }
+            else
+            {
+                <p>No Power Quality data available.</p>
+            }
+        </section>
+
+        <!-- Databases Section -->
+        <section class="databases-section">
+            <h3>Databases</h3>
+            <ul class="database-links">
+                <li><a href="/User/Index">Users</a></li>
+                <li><a href="/IntervalEnergyUsage/Index">Interval Energy Usage</a></li>
+                <li><a href="/EnergyUsage/Index">Energy Usage</a></li>
+                <li><a href="/Bill/Index">Bills</a></li>
+                <li><a href="/Payments/Index">Payments</a></li>
+                <li><a href="/PowerQuality/Index">Power Quality</a></li>
+            </ul>
         </section>
     </main>
 </div>
-
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        let chart;
-
-        function loadChartData() {
-            const range = document.getElementById('timeRange').value;
-
-            fetch(`/Home/LoadDemandChartData?range=${range}`)
-                .then(res => res.json())
-                .then(data => {
-                    const labels = data.map(d => new Date(d.time).toLocaleDateString());
-                    const values = data.map(d => d.totalPower);
-
-                    if (chart) chart.destroy();
-
-                    const ctx = document.getElementById('loadDemandChart').getContext('2d');
-                    chart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: `Instantaneous Power (${range})`,
-                                data: values,
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                fill: true,
-                                tension: 0.3
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { position: 'top' },
-                                title: { display: true, text: `Load Demand (${range})` }
-                            },
-                            scales: {
-                                x: { title: { display: true, text: 'Time' } },
-                                y: { title: { display: true, text: 'Power (kW)' } }
-                            }
-                        }
-                    });
-                });
-        }
-
-        function exportCsv() {
-            const range = document.getElementById('timeRange').value;
-            window.location.href = `/Home/ExportLoadDemandCsv?range=${range}`;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => loadChartData());
-    </script>
-}

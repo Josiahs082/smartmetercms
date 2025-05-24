@@ -1,16 +1,16 @@
 ﻿<Project>
   <ItemGroup>
-    <StaticWebAssetEndpoint Include="_content/smartmetercms/css/admindashboard.39xzmgpamw.css">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\admindashboard.css'))</AssetFile>
-      <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"39xzmgpamw"},{"Name":"integrity","Value":"sha256-6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA="},{"Name":"label","Value":"_content/smartmetercms/css/admindashboard.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"731"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00226UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA=\u0022"},{"Name":"Last-Modified","Value":"Sat, 24 May 2025 16:31:14 GMT"}]]]></ResponseHeaders>
-    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/smartmetercms/css/admindashboard.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\admindashboard.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-6UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"731"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00226UabkxglwC6oWo1zaf4Hjpig7bFyw1IG7L60BUDfaqA=\u0022"},{"Name":"Last-Modified","Value":"Sat, 24 May 2025 16:31:14 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-eqf0khfDA2nG3Uq7sbyPx2Z9dyntcBESpPTLH3PumFk="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"2320"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022eqf0khfDA2nG3Uq7sbyPx2Z9dyntcBESpPTLH3PumFk=\u0022"},{"Name":"Last-Modified","Value":"Sat, 24 May 2025 19:35:19 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/smartmetercms/css/admindashboard.mwvo108eww.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\admindashboard.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"mwvo108eww"},{"Name":"integrity","Value":"sha256-eqf0khfDA2nG3Uq7sbyPx2Z9dyntcBESpPTLH3PumFk="},{"Name":"label","Value":"_content/smartmetercms/css/admindashboard.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"2320"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022eqf0khfDA2nG3Uq7sbyPx2Z9dyntcBESpPTLH3PumFk=\u0022"},{"Name":"Last-Modified","Value":"Sat, 24 May 2025 19:35:19 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/smartmetercms/css/billindex.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\billindex.css'))</AssetFile>

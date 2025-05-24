@@ -1,45 +1,141 @@
 .admin-dashboard-container {
     display: flex;
     min-height: 100vh;
-}
-
-.admin-sidebar {
-    width: 200px;
-    padding: 20px;
-    background-color: #f2f2f2;
-    border-right: 1px solid #ccc;
-}
-
-.admin-sidebar button {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    text-align: left;
-}
-
-.admin-sidebar button:hover {
-    background-color: #0056b3;
+    background-color: #f4f6f9;
 }
 
 .admin-main-content {
     flex: 1;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-main-content h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.admin-main-content p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.billing-section, .load-demand-section, .databases-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.billing-section h3, .load-demand-section h3, .databases-section h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #555;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.load-demand-section {
     padding: 30px;
 }
 
-.generate-bills,
-.load-demand-section {
-    margin-bottom: 40px;
-}
-
 .filter-section {
-    margin-bottom: 15px;
     display: flex;
     align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filter-section label {
+    font-weight: bold;
+    color: #555;
+}
+
+.filter-section select,
+.filter-section input[type="date"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.btn-export {
+    padding: 8px 16px;
+    background-color: #28a745;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-export:hover {
+    background-color: #218838;
+}
+
+.chart-container {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.databases-section {
+    padding: 20px;
+}
+
+.database-links {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
+}
+
+.database-links li {
+    margin: 0;
+}
+
+.database-links a {
+    display: block;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1.1rem;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.database-links a:hover {
+    background-color: #f0faff;
+    color: #0056b3;
+    border-color: #007bff;
 }

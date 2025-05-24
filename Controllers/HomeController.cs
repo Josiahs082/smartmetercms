@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -5,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using smartmetercms.Data;
 using smartmetercms.Models;
-using System.Globalization;
+
 namespace smartmetercms.Controllers
 {
     public class HomeController : Controller
@@ -46,62 +47,53 @@ namespace smartmetercms.Controllers
             return View(user);
         }
 
-        //admin powerqualit display stuff
-       
-        [HttpGet]
-        public async Task<IActionResult> LoadDemandChartData(string range = "day")
+        public async Task<IActionResult> AdminDashboard()
         {
-            IQueryable<PowerQuality> data = _context.PowerQuality;
-
-            List<object> grouped = new List<object>();
-
-            if (range == "day")
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Admin")
             {
-                grouped = await data
-                    .GroupBy(p => new { p.Timestamp.Year, p.Timestamp.Month, p.Timestamp.Day })
-                    .Select(g => new
-                    {
-                        time = new DateTime(g.Key.Year, g.Key.Month, g.Key.Day),
-                        totalPower = g.Sum(p => p.InstantaneousPower)
-                    })
-                    .OrderBy(g => g.time)
-                    .ToListAsync<object>();
-            }
-            else if (range == "week")
-            {
-                grouped = await data
-                    .GroupBy(p => EF.Functions.DateDiffWeek(DateTime.UnixEpoch, p.Timestamp))
-                    .Select(g => new
-                    {
-                        time = DateTime.UnixEpoch.AddDays(g.Key * 7),
-                        totalPower = g.Sum(p => p.InstantaneousPower)
-                    })
-                    .OrderBy(g => g.time)
-                    .ToListAsync<object>();
-            }
-            else if (range == "month")
-            {
-                grouped = await data
-                    .GroupBy(p => new { p.Timestamp.Year, p.Timestamp.Month })
-                    .Select(g => new
-                    {
-                        time = new DateTime(g.Key.Year, g.Key.Month, 1),
-                        totalPower = g.Sum(p => p.InstantaneousPower)
-                    })
-                    .OrderBy(g => g.time)
-                    .ToListAsync<object>();
+                return RedirectToAction("Login", "Account");
             }
 
-            return Json(grouped);
+            var powerQualityData = await _context.PowerQuality
+                .Where(pq => pq.Timestamp >= new DateTime(2025, 5, 22) && pq.Timestamp < new DateTime(2025, 5, 23))
+                .ToListAsync();
+
+            return View(powerQualityData);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> LoadDemandChartData(string date, string range)
+        {
+            var selectedDate = string.IsNullOrEmpty(date) ? new DateTime(2025, 5, 22) : DateTime.Parse(date).Date;
+            var start = selectedDate;
+            var end = selectedDate.AddDays(1);
 
+            var query = _context.PowerQuality
+                .Where(pq => pq.Timestamp >= start && pq.Timestamp < end)
+                .OrderBy(pq => pq.Timestamp);
 
+            var data = await query
+                .GroupBy(pq => new { pq.Timestamp.Year, pq.Timestamp.Month, pq.Timestamp.Day, pq.Timestamp.Hour })
+                .Select(g => new
+                {
+                    Time = $"{g.Key.Year}-{g.Key.Month:02}-{g.Key.Day:02} {g.Key.Hour:02}:00",
+                    TotalPower = g.Sum(x => x.InstantaneousPower)
+                })
+                .ToListAsync();
+
+            if (!data.Any())
+            {
+                return new JsonResult(new[] { new { Time = selectedDate.ToString("yyyy-MM-dd"), TotalPower = 0.0 } });
+            }
+
+            return new JsonResult(data);
+        }
 
         [HttpGet]
-        public async Task<IActionResult> ExportLoadDemandCsv(string range = "day")
+        public async Task<IActionResult> ExportLoadDemandCsv(string date, string range = "hour")
         {
-            var data = await LoadDemandChartData(range) as JsonResult;
+            var data = await LoadDemandChartData(date, range) as JsonResult;
             var list = data?.Value as IEnumerable<dynamic>;
 
             var csv = new System.Text.StringBuilder();
@@ -113,22 +105,7 @@ namespace smartmetercms.Controllers
             }
 
             var bytes = System.Text.Encoding.UTF8.GetBytes(csv.ToString());
-            return File(bytes, "text/csv", $"LoadDemand_{range}_{DateTime.Now:yyyyMMddHHmmss}.csv");
-        }
-
-
-        
-
-
-        public IActionResult AdminDashboard()
-        {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Admin")
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            return View();
+            return File(bytes, "text/csv", $"LoadDemand_hourly_{DateTime.Now:yyyyMMddHHmmss}.csv");
         }
 
         [HttpPost]
