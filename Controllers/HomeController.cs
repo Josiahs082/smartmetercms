@@ -56,7 +56,7 @@ namespace smartmetercms.Controllers
             }
 
             var powerQualityData = await _context.PowerQuality
-                .Where(pq => pq.Timestamp >= new DateTime(2025, 5, 22) && pq.Timestamp < new DateTime(2025, 5, 23))
+                .Where(pq => pq.Timestamp >= DateTime.Now.AddDays(-7))
                 .ToListAsync();
 
             return View(powerQualityData);
@@ -65,7 +65,7 @@ namespace smartmetercms.Controllers
         [HttpGet]
         public async Task<IActionResult> LoadDemandChartData(string date, string range)
         {
-            var selectedDate = string.IsNullOrEmpty(date) ? new DateTime(2025, 5, 22) : DateTime.Parse(date).Date;
+            var selectedDate = string.IsNullOrEmpty(date) ? DateTime.Now.Date : DateTime.Parse(date).Date;
             var start = selectedDate;
             var end = selectedDate.AddDays(1);
 

@@ -33,7 +33,7 @@
             <h3>Load Demand Visualization</h3>
             <div class="filter-section">
                 <label for="dateFilter">Select Date:</label>
-                <input type="date" id="dateFilter" value="2025-05-22" onchange="updateChartData()" />
+                <input type="date" id="dateFilter" value="2025-05-24" onchange="updateChartData()" />
                 <button class="btn-export" onclick="exportCsv()">Export CSV</button>
             </div>
             <div id="chart-error" style="color: red; display: none; margin-bottom: 10px;">
@@ -71,7 +71,7 @@
 
                     window.onload = function () {
                         console.log('Loaded data:', allData);
-                        document.getElementById('dateFilter').value = '2025-05-22';
+                        document.getElementById('dateFilter').value = '2025-05-24';
                         updateChartData();
                     };
 
@@ -132,14 +132,14 @@
                                 },
                                 scales: {
                                     x: { title: { display: true, text: xTitle } },
-                                    y: { title: { display: true, text: 'Power (W)' }, beginAtZero: true }
+                                    y: { title: { display: true, text: 'Power (KW)' }, beginAtZero: true }
                                 }
                             }
                         });
                     }
 
                     function exportCsv() {
-                        const date = document.getElementById('dateFilter').value || '2025-05-22';
+                        const date = document.getElementById('dateFilter').value || '2025-05-24';
                         window.location.href = `/Home/ExportLoadDemandCsv?date=${date}&range=hour`;
                     }
                 </script>

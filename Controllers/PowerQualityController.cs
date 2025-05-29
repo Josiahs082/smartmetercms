@@ -50,8 +50,6 @@ namespace smartmetercms.Controllers
         }
 
         // POST: PowerQuality/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,MeterID,PowerFactor,Frequency,Voltage,InstantaneousPower,Timestamp")] PowerQuality powerQuality)
@@ -82,8 +80,6 @@ namespace smartmetercms.Controllers
         }
 
         // POST: PowerQuality/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,MeterID,PowerFactor,Frequency,Voltage,InstantaneousPower,Timestamp")] PowerQuality powerQuality)
@@ -146,6 +142,29 @@ namespace smartmetercms.Controllers
             }
 
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: PowerQuality/DeleteMultiple
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteMultiple(int[] selectedIds)
+        {
+            if (selectedIds == null || selectedIds.Length == 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var itemsToDelete = await _context.PowerQuality
+                .Where(pq => selectedIds.Contains(pq.ID))
+                .ToListAsync();
+
+            if (itemsToDelete.Any())
+            {
+                _context.PowerQuality.RemoveRange(itemsToDelete);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

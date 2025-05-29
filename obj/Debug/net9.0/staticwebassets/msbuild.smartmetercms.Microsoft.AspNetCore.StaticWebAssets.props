@@ -156,8 +156,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>1z9cjboqbs</Fingerprint>
-      <Integrity>g0MESHLNKtClhFFPt08o7EUKKouHXRkAn01d7pOORVs=</Integrity>
+      <Fingerprint>2r6lofpn48</Fingerprint>
+      <Integrity>kuZV1h5YzvmGe+yi4iOORwe+LDh/yjIaGAYEgHURLqY=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\powerqualityindex.css'))</OriginalItemSpec>
