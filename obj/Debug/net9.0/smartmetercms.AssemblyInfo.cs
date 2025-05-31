@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("smartmetercms")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f062cf34d6fc6515205295d8050fac213640fd2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de7d36ab22c7d20602216b562f9a1d61f3fa578d")]
 [assembly: System.Reflection.AssemblyProductAttribute("smartmetercms")]
 [assembly: System.Reflection.AssemblyTitleAttribute("smartmetercms")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

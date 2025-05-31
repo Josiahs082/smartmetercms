@@ -60,23 +60,37 @@ namespace smartmetercms.Controllers
 
         private float CalculateUnpaidAmount(User user, List<MeterStatus> statuses)
         {
+            // Get the latest cumulative energy usage
             var energyUsage = _context.EnergyUsage
                 .Where(e => e.MeterID == user.MeterID)
                 .OrderByDescending(e => e.Timestamp)
                 .FirstOrDefault();
-            float cumulativeEnergy = energyUsage != null ? (float)energyUsage.EnergyUsed : 0.0f; // Explicit cast and null check
+            float cumulativeEnergy = energyUsage != null ? (float)energyUsage.EnergyUsed : 0.0f;
 
             const float ratePerKWh = 47.6f; // Adjustable rate ($0.12/kWh)
             float totalCost = cumulativeEnergy * ratePerKWh;
 
-            float totalPayments = user.Bills
-                .Where(b => b.PaidStatus) // Use PaidStatus as bool
-                .Sum(b => (float)b.AmountDue); // Explicit cast for AmountDue (assuming double)
-            float unpaidAmount = totalCost - totalPayments;
+            // Calculate total amount paid by analyzing bills
+            float totalPaid = 0.0f;
+            if (user.Bills != null)
+            {
+                foreach (var bill in user.Bills)
+                {
+                    // Calculate the original cost of the bill based on energy used
+                    float billOriginalCost = bill.TotalEnergyUsed * ratePerKWh;
+                    // Amount paid = original cost - remaining amount due
+                    float amountPaid = billOriginalCost - (float)bill.AmountDue;
+                    if (amountPaid < 0) amountPaid = 0.0f; // Ensure no negative payments
+                    totalPaid += amountPaid;
+                }
+            }
+
+            // Calculate unpaid amount: total cost - total paid
+            float unpaidAmount = totalCost - totalPaid;
             if (unpaidAmount < 0) unpaidAmount = 0.0f;
 
             _logger.LogInformation($"MeterID: {user.MeterID}, Status: {(statuses.FirstOrDefault(s => s.MeterID == user.MeterID)?.Status ?? "Connected")}, " +
-                                $"CumulativeEnergy: {cumulativeEnergy}, TotalCost: {totalCost}, TotalPayments: {totalPayments}, UnpaidAmount: {unpaidAmount}");
+                                $"CumulativeEnergy: {cumulativeEnergy}, TotalCost: {totalCost}, TotalPaid: {totalPaid}, UnpaidAmount: {unpaidAmount}");
             return unpaidAmount;
         }
     }
