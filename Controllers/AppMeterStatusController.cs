@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace smartmetercms.Controllers
         {
             try
             {
-                _logger.LogInformation($"Fetching meter statuses at {System.DateTime.Now}.");
+                _logger.LogInformation($"Fetching meter statuses at {DateTime.Now}");
 
                 var users = await _context.User
                     .Include(u => u.Bills)
@@ -35,17 +36,16 @@ namespace smartmetercms.Controllers
                 _logger.LogInformation($"Found {users.Count} users.");
 
                 var statuses = await _context.MeterStatus.ToListAsync();
-
                 _logger.LogInformation($"Found {statuses.Count} meter statuses.");
 
                 var result = users
                     .Where(u => u.MeterID != "admin") // Exclude admin user
-                    .Select(u =>
+                    .Select(u => new
                     {
-                        var status = statuses.FirstOrDefault(s => s.MeterID == u.MeterID) ?? new MeterStatus { MeterID = u.MeterID, Status = "Connected", LastUpdated = System.DateTime.Now };
-                        var unpaidAmount = u.Bills.Where(b => !b.PaidStatus && b.AmountDue > 0).Sum(b => b.AmountDue);
-                        _logger.LogInformation($"MeterID: {u.MeterID}, Status: {status.Status}, UnpaidAmount: {unpaidAmount}");
-                        return new { MeterID = u.MeterID, Status = status.Status, UnpaidAmount = unpaidAmount };
+                        MeterID = u.MeterID,
+                        Status = (statuses.FirstOrDefault(s => s.MeterID == u.MeterID) ?? 
+                                 new MeterStatus { MeterID = u.MeterID, Status = "Connected", LastUpdated = DateTime.Now }).Status,
+                        UnpaidAmount = CalculateUnpaidAmount(u, statuses)
                     })
                     .ToList();
 
@@ -53,9 +53,31 @@ namespace smartmetercms.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error fetching meter statuses at {System.DateTime.Now}.");
+                _logger.LogError(ex, $"Error fetching meter statuses at {DateTime.Now}");
                 return StatusCode(500, "An error occurred while fetching meter statuses.");
             }
+        }
+
+        private float CalculateUnpaidAmount(User user, List<MeterStatus> statuses)
+        {
+            var energyUsage = _context.EnergyUsage
+                .Where(e => e.MeterID == user.MeterID)
+                .OrderByDescending(e => e.Timestamp)
+                .FirstOrDefault();
+            float cumulativeEnergy = energyUsage != null ? (float)energyUsage.EnergyUsed : 0.0f; // Explicit cast and null check
+
+            const float ratePerKWh = 47.6f; // Adjustable rate ($0.12/kWh)
+            float totalCost = cumulativeEnergy * ratePerKWh;
+
+            float totalPayments = user.Bills
+                .Where(b => b.PaidStatus) // Use PaidStatus as bool
+                .Sum(b => (float)b.AmountDue); // Explicit cast for AmountDue (assuming double)
+            float unpaidAmount = totalCost - totalPayments;
+            if (unpaidAmount < 0) unpaidAmount = 0.0f;
+
+            _logger.LogInformation($"MeterID: {user.MeterID}, Status: {(statuses.FirstOrDefault(s => s.MeterID == user.MeterID)?.Status ?? "Connected")}, " +
+                                $"CumulativeEnergy: {cumulativeEnergy}, TotalCost: {totalCost}, TotalPayments: {totalPayments}, UnpaidAmount: {unpaidAmount}");
+            return unpaidAmount;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace smartmetercms.Controllers
     public class BillController : Controller
     {
         private readonly smartmetercmsContext _context;
-        private const decimal RatePerKWh = 0.15m;
+        private const decimal RatePerKWh = 47.6m;
 
         public BillController(smartmetercmsContext context)
         {
