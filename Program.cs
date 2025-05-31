@@ -20,7 +20,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
+builder.Services.AddLogging();
 // Apply migrations at startup
 using (var scope = app.Services.CreateScope())
 {

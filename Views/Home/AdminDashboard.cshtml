@@ -63,11 +63,7 @@
                 <script>
                     var ctx = document.getElementById('loadDemandChart').getContext('2d');
                     var loadDemandChart;
-                    var allData = @Html.Raw(Json.Serialize(Model.Select(pq => new
-                    {
-                        timestamp = pq.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"),
-                        power = pq.InstantaneousPower
-                    }).ToArray()));
+                    var allData = @Html.Raw(Json.Serialize(Model.Select(pq => new { timestamp = pq.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"), power = pq.InstantaneousPower }).ToList()));
 
                     window.onload = function () {
                         console.log('Loaded data:', allData);
@@ -105,10 +101,10 @@
                         }
                     }
 
-                    function updateChart(data) {
+                    function updateChart(filteredData) {
                         if (loadDemandChart) loadDemandChart.destroy();
 
-                        const labels = data.map(d => `${d.hour}:00`);
+                        const labels = filteredData.map(d => `${d.hour}:00`);
                         const xTitle = 'Hour';
 
                         loadDemandChart = new Chart(ctx, {
@@ -117,7 +113,7 @@
                                 labels: labels,
                                 datasets: [{
                                     label: 'Instantaneous Power (Hourly)',
-                                    data: data.map(d => d.power),
+                                    data: filteredData.map(d => d.power),
                                     borderColor: 'rgba(54, 162, 235, 1)',
                                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                     fill: true,
@@ -150,6 +146,33 @@
             }
         </section>
 
+        <!-- Meter Control Section -->
+        <section class="billing-section">
+            <h3>Meter Control</h3>
+            <form asp-action="ToggleMeterStatuses" method="post" style="margin-bottom: 20px;">
+                <button type="submit" class="btn btn-primary">Disconnect/Reconnect</button>
+            </form>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Meter ID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in ViewBag.Users)
+                    {
+                        var meterStatuses = ViewBag.MeterStatuses as List<smartmetercms.Models.MeterStatus>;
+                        var meterStatus = meterStatuses?.FirstOrDefault(ms => ms.MeterID == user.MeterID) ?? new smartmetercms.Models.MeterStatus { Status = "Connected" };
+                        <tr>
+                            <td>@user.MeterID</td>
+                            <td>@meterStatus.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+
         <!-- Databases Section -->
         <section class="databases-section">
             <h3>Databases</h3>
@@ -160,6 +183,7 @@
                 <li><a href="/Bill/Index">Bills</a></li>
                 <li><a href="/Payments/Index">Payments</a></li>
                 <li><a href="/PowerQuality/Index">Power Quality</a></li>
+                <li><a href="/MeterStatus/Index">Meter Status</a></li>
             </ul>
         </section>
     </main>

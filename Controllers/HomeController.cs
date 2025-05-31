@@ -6,16 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using smartmetercms.Data;
 using smartmetercms.Models;
+using Microsoft.Extensions.Logging;
 
 namespace smartmetercms.Controllers
 {
     public class HomeController : Controller
     {
         private readonly smartmetercmsContext _context;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(smartmetercmsContext context)
+        public HomeController(smartmetercmsContext context, ILogger<HomeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -59,6 +62,14 @@ namespace smartmetercms.Controllers
                 .Where(pq => pq.Timestamp >= DateTime.Now.AddDays(-7))
                 .ToListAsync();
 
+            var users = await _context.User
+                .Include(u => u.Bills)
+                .ToListAsync();
+            var meterStatuses = await _context.MeterStatus.ToListAsync();
+
+            ViewBag.Users = users;
+            ViewBag.MeterStatuses = meterStatuses;
+
             return View(powerQualityData);
         }
 
@@ -77,7 +88,7 @@ namespace smartmetercms.Controllers
                 .GroupBy(pq => new { pq.Timestamp.Year, pq.Timestamp.Month, pq.Timestamp.Day, pq.Timestamp.Hour })
                 .Select(g => new
                 {
-                    Time = $"{g.Key.Year}-{g.Key.Month:02}-{g.Key.Day:02} {g.Key.Hour:02}:00",
+                    Time = $"{g.Key.Year}-{g.Key.Month:00}-{g.Key.Day:00} {g.Key.Hour:00}:00",
                     TotalPower = g.Sum(x => x.InstantaneousPower)
                 })
                 .ToListAsync();
@@ -106,6 +117,100 @@ namespace smartmetercms.Controllers
 
             var bytes = System.Text.Encoding.UTF8.GetBytes(csv.ToString());
             return File(bytes, "text/csv", $"LoadDemand_hourly_{DateTime.Now:yyyyMMddHHmmss}.csv");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUnpaidCosts()
+        {
+            var users = await _context.User
+                .Include(u => u.Bills)
+                .ToListAsync();
+
+            var unpaidCosts = users.Select(u => new
+            {
+                MeterID = u.MeterID,
+                UnpaidAmount = u.Bills
+                    .Where(b => !b.PaidStatus && b.AmountDue > 0)
+                    .Sum(b => b.AmountDue)
+            }).ToList();
+
+            return Json(unpaidCosts);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleMeterStatuses()
+        {
+            try
+            {
+                var users = await _context.User
+                    .Include(u => u.Bills)
+                    .ToListAsync();
+
+                _logger.LogInformation($"Found {users.Count} users to process at {DateTime.Now}.");
+
+                bool anyChanges = false;
+                foreach (var user in users)
+                {
+                    if (string.IsNullOrEmpty(user.MeterID))
+                    {
+                        _logger.LogWarning($"User has no MeterID, skipping.");
+                        continue;
+                    }
+
+                    var hasUnpaidBills = user.Bills.Any(b => !b.PaidStatus && b.AmountDue > 0);
+                    _logger.LogInformation($"Processing MeterID: {user.MeterID}, Has Unpaid Bills: {hasUnpaidBills}");
+
+                    var meterStatus = await _context.MeterStatus
+                        .FirstOrDefaultAsync(ms => ms.MeterID == user.MeterID);
+
+                    if (meterStatus == null)
+                    {
+                        meterStatus = new MeterStatus
+                        {
+                            MeterID = user.MeterID,
+                            Status = hasUnpaidBills ? "Disconnected" : "Connected",
+                            LastUpdated = DateTime.Now
+                        };
+                        _context.MeterStatus.Add(meterStatus);
+                        _logger.LogInformation($"Created new MeterStatus for MeterID: {user.MeterID}, Status: {meterStatus.Status}");
+                        anyChanges = true;
+                    }
+                    else
+                    {
+                        var previousStatus = meterStatus.Status;
+                        var newStatus = hasUnpaidBills ? "Disconnected" : "Connected";
+                        if (meterStatus.Status != newStatus)
+                        {
+                            meterStatus.Status = newStatus;
+                            meterStatus.LastUpdated = DateTime.Now;
+                            _context.Entry(meterStatus).State = EntityState.Modified;
+                            _logger.LogInformation($"Updated MeterID: {user.MeterID}, Status changed from {previousStatus} to {meterStatus.Status}");
+                            anyChanges = true;
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"No change needed for MeterID: {user.MeterID}, Status remains: {meterStatus.Status}");
+                        }
+                    }
+                }
+
+                if (anyChanges)
+                {
+                    var changes = await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Saved {changes} changes to the database at {DateTime.Now}.");
+                }
+                else
+                {
+                    _logger.LogInformation($"No changes to save at {DateTime.Now}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error occurred while toggling meter statuses at {DateTime.Now}.");
+                return StatusCode(500, "An error occurred while updating meter statuses. Check logs for details.");
+            }
+
+            return RedirectToAction("AdminDashboard");
         }
 
         [HttpPost]

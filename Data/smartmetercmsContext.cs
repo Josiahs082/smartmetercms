@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using smartmetercms.Models;
 
@@ -14,12 +10,26 @@ namespace smartmetercms.Data
         {
         }
 
-        public DbSet<smartmetercms.Models.User> User { get; set; } = default!;
-        public DbSet<smartmetercms.Models.EnergyUsage> EnergyUsage { get; set; } = default!;
-        public DbSet<smartmetercms.Models.Bill> Bill { get; set; } = default!;
-        public DbSet<smartmetercms.Models.Payments> Payments { get; set; } = default!;
-        public DbSet<smartmetercms.Models.IntervalEnergyUsage> IntervalEnergyUsage { get; set; } = default!;
-        public DbSet<smartmetercms.Models.PowerQuality> PowerQuality { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<IntervalEnergyUsage> IntervalEnergyUsage { get; set; }
+        public DbSet<EnergyUsage> EnergyUsage { get; set; }
+        public DbSet<Bill> Bill { get; set; }
+        public DbSet<Payments> Payments { get; set; }
+        public DbSet<PowerQuality> PowerQuality { get; set; }
+        public DbSet<MeterStatus> MeterStatus { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Define the relationship between User and Bill
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Bills)
+                .WithOne() // No navigation property in Bill pointing back to User
+                .HasForeignKey(b => b.MeterID) // Bill.MeterID links to User.MeterID
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Ensure MeterStatus uses MeterID as the primary key
+            modelBuilder.Entity<MeterStatus>()
+                .HasKey(ms => ms.MeterID);
+        }
     }
 }
